@@ -30,3 +30,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Confidential information ###
+/bot/src/main/resources/settings.env
+
+### System files ###
+.DS_Store
