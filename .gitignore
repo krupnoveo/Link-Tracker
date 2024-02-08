@@ -32,7 +32,7 @@ build/
 .vscode/
 
 ### Confidential information ###
-*.properties
+*.env
 
 ### System files ###
 .DS_Store
