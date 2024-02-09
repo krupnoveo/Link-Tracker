@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.commands.ChainCommandsHandler;
+import edu.java.bot.commandsHolder.CommandsHolder;
 import edu.java.bot.printerToChat.ChatResponser;
 import edu.java.bot.printerToChat.DefaultChatResponser;
 
@@ -12,10 +13,10 @@ public class ChatUpdatesListener {
     private final ChatResponser responser;
     private final ChainCommandsHandler chainCommandsHandler;
 
-    public ChatUpdatesListener(TelegramBot bot) {
+    public ChatUpdatesListener(TelegramBot bot, CommandsHolder commandsHolder) {
         this.bot = bot;
         this.responser = new DefaultChatResponser(bot);
-        this.chainCommandsHandler = new ChainCommandsHandler();
+        this.chainCommandsHandler = new ChainCommandsHandler(commandsHolder);
     }
 
     public void setUpdatesListener() {

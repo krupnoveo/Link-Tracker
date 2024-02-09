@@ -2,33 +2,31 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
-import java.util.Properties;
+import edu.java.bot.commandsHolder.CommandsHolder;
+import java.util.List;
 import lombok.SneakyThrows;
 
 public class ChainCommandsHandler {
+
+    private final CommandsHolder commandsHolder;
     private final CommandHandler startHandler;
-    private final CommandHandler helpHandler;
-    private final CommandHandler trackHandler;
-    private final CommandHandler untrackHandler;
-    private final CommandHandler listHandler;
 
     @SneakyThrows
-    public ChainCommandsHandler() {
-        Properties properties = new Properties();
-        properties.load(getClass().getResourceAsStream("/messages.properties"));
-        startHandler = new StartCommand(properties);
-        helpHandler = new HelpCommand(properties);
-        trackHandler = new TrackCommand(properties);
-        untrackHandler = new UntrackCommand(properties);
-        listHandler = new ListCommand(properties);
+    public ChainCommandsHandler(CommandsHolder commandsHolder) {
+        this.commandsHolder = commandsHolder;
+        this.startHandler = commandsHolder.getCommandHandlers().get(0);
+        setUpChain();
+    }
+
+    public void setUpChain() {
+        List<CommandHandler> commandHandlerList = commandsHolder.getCommandHandlers();
+        for (int i = 1; i < commandHandlerList.size(); i++) {
+            commandHandlerList.get(i - 1)
+                .setNextHandler(commandHandlerList.get(i));
+        }
     }
 
     public SendMessage handleCommand(Message message) {
-        startHandler
-            .setNextHandler(helpHandler)
-            .setNextHandler(trackHandler)
-            .setNextHandler(untrackHandler)
-            .setNextHandler(listHandler);
         return startHandler.handleCommand(message);
     }
 }
