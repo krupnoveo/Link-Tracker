@@ -1,6 +1,6 @@
 package edu.java.bot.commands;
 
-import com.pengrad.telegrambot.model.Message;
+import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import java.util.Properties;
 
@@ -12,12 +12,11 @@ public abstract class CommandHandler {
         this.properties = properties;
     }
 
-    public CommandHandler setNextHandler(CommandHandler nextHandler) {
+    public void setNextHandler(CommandHandler nextHandler) {
         this.nextHandler = nextHandler;
-        return nextHandler;
     }
 
-    public abstract SendMessage handleCommand(Message message);
+    public abstract SendMessage handleCommand(Update update);
 
     public abstract String commandName();
 

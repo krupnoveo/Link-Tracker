@@ -1,9 +1,10 @@
 package edu.java.bot.commandsHolder;
 
 import edu.java.bot.commands.CommandHandler;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
@@ -17,13 +18,15 @@ public class CommandsHolder {
     private final Map<String, String> commandsNameAndDescriptions;
 
     @Autowired
-    public CommandsHolder(List<CommandHandler> commandHandlers) {
+    public CommandsHolder(List<CommandHandler> commandHandlers, Properties properties) {
         this.commandHandlers = commandHandlers;
-        this.commandsNameAndDescriptions = new HashMap<>();
+        this.commandsNameAndDescriptions = new LinkedHashMap<>();
         for (CommandHandler commandHandler : commandHandlers) {
             String commandName = commandHandler.commandName();
-            String commandDescription = commandHandler.commandDescription();
-            commandsNameAndDescriptions.put(commandName, commandDescription);
+            if (!commandName.equals(properties.getProperty("command.start.name"))) {
+                String commandDescription = commandHandler.commandDescription();
+                commandsNameAndDescriptions.put(commandName, commandDescription);
+            }
         }
     }
 }

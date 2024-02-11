@@ -1,7 +1,7 @@
 package edu.java.bot.configuration;
 
-import java.util.Properties;
 import com.pengrad.telegrambot.TelegramBot;
+import java.util.Properties;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

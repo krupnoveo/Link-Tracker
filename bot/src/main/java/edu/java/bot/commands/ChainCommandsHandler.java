@@ -1,6 +1,6 @@
 package edu.java.bot.commands;
 
-import com.pengrad.telegrambot.model.Message;
+import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.commandsHolder.CommandsHolder;
 import java.util.List;
@@ -26,7 +26,7 @@ public class ChainCommandsHandler {
         }
     }
 
-    public SendMessage handleCommand(Message message) {
-        return startHandler.handleCommand(message);
+    public SendMessage handleCommand(Update update) {
+        return startHandler.handleCommand(update);
     }
 }

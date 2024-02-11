@@ -4,7 +4,7 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.request.SetMyCommands;
 import edu.java.bot.commandsHolder.CommandsHolder;
-import edu.java.bot.updatesListener.ChatUpdatesListener;
+import edu.java.bot.updatesListener.MessageUpdatesListener;
 import jakarta.annotation.PostConstruct;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class Bot {
     }
 
     private void setUpUpdatesListener() {
-        ChatUpdatesListener listener = new ChatUpdatesListener(bot, commandsHolder);
+        MessageUpdatesListener listener = new MessageUpdatesListener(bot, commandsHolder);
         listener.setUpdatesListener();
     }
 }
