@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.models.AddLinkToDatabaseResponse;
 import edu.java.bot.service.BotService;
+import java.util.Arrays;
 import java.util.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,7 +35,7 @@ public class TrackCommand extends CommandHandler {
         if (command.equals(commandName())) {
             SendMessage sendMessage;
             if (text.length > 1) {
-                String url = text[1];
+                String url = String.join(" ", Arrays.copyOfRange(text, 1, text.length));
                 AddLinkToDatabaseResponse response = botService.addLinkToDatabase(url, id);
                 if (response.status()) {
                     sendMessage = new SendMessage(

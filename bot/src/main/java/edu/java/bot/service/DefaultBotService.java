@@ -20,13 +20,20 @@ public class DefaultBotService implements BotService {
     @Override
     public AddLinkToDatabaseResponse addLinkToDatabase(String url, Long userId) {
         //stub
-        return new AddLinkToDatabaseResponse(true, "такая ссылка уже есть");
+        return new AddLinkToDatabaseResponse(
+            true,
+            "такая ссылка уже есть"
+        );
     }
 
     @Override
     public RemoveLinkFromDatabaseResponse removeLinkFromDatabase(UUID uuid, Long userId) {
         //stub
-        return new RemoveLinkFromDatabaseResponse(true, "такой ссылки нет в списке добавленных");
+        return new RemoveLinkFromDatabaseResponse(
+            true,
+            "такой ссылки нет в списке добавленных",
+            new Link("test", uuid)
+        );
     }
 
     @Override
@@ -34,8 +41,14 @@ public class DefaultBotService implements BotService {
         //stub
         return new ListLinksResponse(
             List.of(
-                new Link("https://github.com/krupnoveo/Link-Tracker", UUID.randomUUID()),
-                new Link("https://stackoverflow.com/questions/77975883/spring-security-getting-oauth2-token-from-authorization-server-using-secret-jwt", UUID.randomUUID())
+                new Link(
+                    "https://github.com/krupnoveo/Link-Tracker",
+                    UUID.randomUUID()
+                ),
+                new Link(
+                    "https://stackoverflow.com/questions/77975883/spring-security-getting-oauth2-token-from-authorization-server-using-secret-jwt",
+                    UUID.randomUUID()
+                )
             )
         );
     }
