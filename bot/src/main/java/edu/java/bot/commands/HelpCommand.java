@@ -34,7 +34,7 @@ public class HelpCommand extends CommandHandler {
         Long id = update.message().chat().id();
         if (command.equals(commandName())) {
             Map<String, String> commandsNameAndDescription = commandsHolder.getCommandsNameAndDescriptions();
-            StringBuilder response = new StringBuilder("***Список команд:***");
+            StringBuilder response = new StringBuilder(properties.getProperty("command.help.listCommands"));
             for (Map.Entry<String, String> entry : commandsNameAndDescription.entrySet()) {
                 response
                     .append("\n")

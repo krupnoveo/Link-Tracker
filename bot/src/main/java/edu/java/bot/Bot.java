@@ -42,6 +42,6 @@ public class Bot {
 
     private void setUpUpdatesListener() {
         MessageUpdatesListener listener = new MessageUpdatesListener(bot, commandsHolder);
-        listener.setUpdatesListener();
+        bot.setUpdatesListener(listener);
     }
 }
