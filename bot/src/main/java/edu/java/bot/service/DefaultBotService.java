@@ -1,8 +1,8 @@
 package edu.java.bot.service;
 
-import edu.java.bot.api.httpClient.ScrapperClient;
 import edu.java.bot.api.dto.request.AddLinkRequest;
 import edu.java.bot.api.dto.request.RemoveLinkRequest;
+import edu.java.bot.api.httpClient.ScrapperClient;
 import edu.java.bot.models.AddLinkToDatabaseResponse;
 import edu.java.bot.models.GenericResponse;
 import edu.java.bot.models.ListLinksResponse;

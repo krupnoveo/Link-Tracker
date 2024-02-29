@@ -4,8 +4,6 @@ import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.commands.CommandHandler;
-import edu.java.bot.commands.StartCommand;
-import edu.java.bot.commands.UntrackCommand;
 import edu.java.bot.commandsHolder.CommandsHolder;
 import edu.java.bot.printerToChat.ChatResponser;
 import java.util.List;
