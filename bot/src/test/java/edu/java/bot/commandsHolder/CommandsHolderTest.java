@@ -15,6 +15,7 @@ import java.util.Properties;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CommandsHolderTest {
@@ -41,12 +42,12 @@ public class CommandsHolderTest {
             properties.getProperty("command.help.name"), properties.getProperty("command.help.description")
         );
 
-        assertThat(commandsHolder.getCommandHandlers()).containsExactlyInAnyOrderElementsOf(commandHandlerList);
+        assertThat(commandsHolder.getCommandHandlers().values()).containsExactlyInAnyOrderElementsOf(commandHandlerList);
         assertThat(commandsHolder.getCommandsNameAndDescriptions()).containsExactlyInAnyOrderEntriesOf(commandsNameAndDescriptions);
     }
 
     private List<CommandHandler> getCommandHandlers(Properties properties) {
-        BotService botService = new DefaultBotService();
+        BotService botService = Mockito.mock(DefaultBotService.class);
         CommandHandler startCommand = new StartCommand(properties, botService);
         CommandHandler listCommand = new ListCommand(properties, botService);
         CommandHandler trackCommand = new TrackCommand(properties, botService);

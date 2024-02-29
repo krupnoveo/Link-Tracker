@@ -16,7 +16,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(MockitoExtension.class)
 public class HelpCommandTest extends CommandTest {
     @Mock
     private CommandsHolder commandsHolder;
@@ -25,7 +24,7 @@ public class HelpCommandTest extends CommandTest {
     @DisplayName("Тест HelpCommand.handleCommand(), когда команда равна /help")
     @Test
     public void handleCommand_whenCommandIsHelp_shouldReturnCorrectMessage() {
-        Update update = Mockito.mock(Update.class, Answers.CALLS_REAL_METHODS);
+        Update update = Mockito.mock(Update.class);
         Properties properties = new Properties();
         properties.load(getClass().getResourceAsStream("/messages.properties"));
 
@@ -39,28 +38,16 @@ public class HelpCommandTest extends CommandTest {
         );
 
         Mockito.when(commandsHolder.getCommandsNameAndDescriptions()).thenReturn(commands);
-        mockUpdate(update, properties.getProperty("command.help.name"));
+        mockUpdate(update);
 
         HelpCommand helpCommand = new HelpCommand(properties, commandsHolder);
         SendMessage actual = helpCommand.handleCommand(update);
         SendMessage expected = new SendMessage(
-            1L,
+            update.message().chat().id(),
             properties.getProperty("command.help.listCommands") + "\n" +
                 commandNameForTest + " - " + commandDescriptionForTest.toLowerCase());
 
         assertThat(actual.getParameters().get("text")).isEqualTo(expected.getParameters().get("text"));
         assertThat(actual.getParameters().get("chat_id")).isEqualTo(expected.getParameters().get("chat_id"));
-    }
-
-    @SneakyThrows
-    @DisplayName("Тест HelpCommand.handleCommand(), когда команда не равна /help, а следующее звено цепи отсутствует")
-    @Test
-    public void handleCommand_whenCommandIsNotHelp_shouldReturnCorrectMessage() {
-        Update update = Mockito.mock(Update.class, Answers.CALLS_REAL_METHODS);
-        Properties properties = new Properties();
-        properties.load(getClass().getResourceAsStream("/messages.properties"));
-        HelpCommand helpCommand = new HelpCommand(properties, commandsHolder);
-
-        testWhenTransmittedCommandIsNotEqualToCurrentClassCommand(helpCommand, update, properties);
     }
 }

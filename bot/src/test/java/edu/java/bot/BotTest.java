@@ -1,8 +1,11 @@
 package edu.java.bot;
 
 import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.UpdatesListener;
+import edu.java.bot.api.httpClient.ScrapperClient;
 import edu.java.bot.commands.CommandHandler;
 import edu.java.bot.commands.HelpCommand;
+import edu.java.bot.commands.ListCommand;
 import edu.java.bot.commands.StartCommand;
 import edu.java.bot.commands.TrackCommand;
 import edu.java.bot.commands.UntrackCommand;
@@ -11,12 +14,12 @@ import edu.java.bot.service.BotService;
 import edu.java.bot.service.DefaultBotService;
 import edu.java.bot.updatesListener.MessageUpdatesListener;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -24,18 +27,21 @@ import java.util.Properties;
 public class BotTest {
     @SneakyThrows
     @Test
+    @DisplayName("Тест Bot.startUpBot()")
     public void startUpBot_shouldWorkCorrectly() {
-        Properties properties = new Properties();
-        properties.load(getClass().getResourceAsStream("/messages.properties"));
-        BotService botService = new DefaultBotService();
         CommandsHolder commandsHolder = Mockito.mock(CommandsHolder.class);
         TelegramBot telegramBot = Mockito.mock(TelegramBot.class);
-        List<CommandHandler> commands = List.of(
-            new StartCommand(properties, botService),
-            new HelpCommand(properties, commandsHolder),
-            new TrackCommand(properties, botService),
-            new UntrackCommand(properties, botService),
-            new UntrackCommand(properties, botService)
+        ScrapperClient client = Mockito.mock(ScrapperClient.class);
+        UpdatesListener listener = Mockito.mock(MessageUpdatesListener.class);
+        Properties properties = new Properties();
+        properties.load(getClass().getResourceAsStream("/messages.properties"));
+        BotService botService = new DefaultBotService(client);
+        Map<String, CommandHandler> commands = Map.of(
+            properties.getProperty("command.start.name"), new StartCommand(properties, botService),
+            properties.getProperty("command.help.name"), new HelpCommand(properties, commandsHolder),
+            properties.getProperty("command.track.name"),new TrackCommand(properties, botService),
+            properties.getProperty("command.untrack.name"),new UntrackCommand(properties, botService),
+            properties.getProperty("command.list.name"),new ListCommand(properties, botService)
         );
         Map<String, String> commandsDescription = new LinkedHashMap<>();
         commandsDescription.put(
@@ -50,10 +56,10 @@ public class BotTest {
         commandsDescription.put(
             properties.getProperty("command.list.name"), properties.getProperty("command.list.description")
         );
-        Mockito.when(commandsHolder.getCommandHandlers()).thenReturn(commands);
+
         Mockito.when(commandsHolder.getCommandsNameAndDescriptions()).thenReturn(commandsDescription);
 
-        Bot bot = new Bot(commandsHolder, telegramBot);
+        Bot bot = new Bot(commandsHolder, telegramBot, listener);
         bot.startUpBot();
 
         Mockito.verify(telegramBot).setUpdatesListener(Mockito.any(MessageUpdatesListener.class));
