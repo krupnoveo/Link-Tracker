@@ -41,7 +41,7 @@ public class StartCommandTest extends CommandTest {
         mockUpdate(update, properties.getProperty("command.start.name"));
         Mockito.when(update.message().chat().firstName()).thenReturn("name");
         Mockito.when(botService.registerUser(
-                new User(1L, update.message().chat().firstName()))
+                new User(1L))
             ).thenReturn(isSuccessful);
 
         StartCommand command = new StartCommand(properties, botService);

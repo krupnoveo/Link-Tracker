@@ -1,55 +1,44 @@
 package edu.java.bot.service;
 
+import edu.java.bot.api.httpClient.ScrapperClient;
+import edu.java.bot.api.dto.request.AddLinkRequest;
+import edu.java.bot.api.dto.request.RemoveLinkRequest;
 import edu.java.bot.models.AddLinkToDatabaseResponse;
-import edu.java.bot.models.Link;
+import edu.java.bot.models.GenericResponse;
 import edu.java.bot.models.ListLinksResponse;
 import edu.java.bot.models.RemoveLinkFromDatabaseResponse;
 import edu.java.bot.models.User;
-import java.util.List;
-import java.util.UUID;
+import java.net.URI;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class DefaultBotService implements BotService {
+    private final ScrapperClient scrapperClient;
+
     @Override
-    public boolean registerUser(User user) {
-        //stub
-        return true;
+    public GenericResponse<Void> registerUser(User user) {
+        return scrapperClient.registerChat(user);
     }
 
     @Override
-    public AddLinkToDatabaseResponse addLinkToDatabase(String url, Long userId) {
-        //stub
-        return new AddLinkToDatabaseResponse(
-            true,
-            "такая ссылка уже есть"
-        );
+    @SneakyThrows
+    public GenericResponse<AddLinkToDatabaseResponse> addLinkToDatabase(String url, long chatId) {
+        AddLinkRequest addLinkRequest = new AddLinkRequest(new URI(url));
+        return scrapperClient.addLinkToTracking(chatId, addLinkRequest);
     }
 
     @Override
-    public RemoveLinkFromDatabaseResponse removeLinkFromDatabase(UUID uuid, Long userId) {
-        //stub
-        return new RemoveLinkFromDatabaseResponse(
-            true,
-            "такой ссылки нет в списке добавленных",
-            new Link("test", uuid)
-        );
+    @SneakyThrows
+    public GenericResponse<RemoveLinkFromDatabaseResponse> removeLinkFromDatabase(long linkId, long chatId) {
+        RemoveLinkRequest removeLinkRequest = new RemoveLinkRequest(linkId);
+        return scrapperClient.removeLinkFromTracking(chatId, removeLinkRequest);
     }
 
     @Override
-    public ListLinksResponse listLinksFromDatabase(Long userId) {
-        //stub
-        return new ListLinksResponse(
-            List.of(
-                new Link(
-                    "https://github.com/krupnoveo/Link-Tracker",
-                    UUID.randomUUID()
-                ),
-                new Link(
-                    "https://stackoverflow.com/questions/77975883/spring-security-getting-oauth2-token-from-authorization-server-using-secret-jwt",
-                    UUID.randomUUID()
-                )
-            )
-        );
+    public GenericResponse<ListLinksResponse> listLinksFromDatabase(long chatId) {
+        return scrapperClient.listLinks(chatId);
     }
 }
