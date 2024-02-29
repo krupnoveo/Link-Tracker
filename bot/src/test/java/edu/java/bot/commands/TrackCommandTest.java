@@ -8,6 +8,7 @@ import edu.java.bot.models.GenericResponse;
 import edu.java.bot.service.BotService;
 import edu.java.bot.service.DefaultBotService;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,20 +21,23 @@ import java.util.Properties;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TrackCommandTest extends CommandTest {
+    private Update update;
+    private DefaultBotService defaultBotService;
+    private Properties properties;
 
+    @BeforeEach
     @SneakyThrows
+    public void init() {
+        update = Mockito.mock(Update.class);
+        defaultBotService = Mockito.mock(DefaultBotService.class);
+        properties = new Properties();
+        properties.load(getClass().getResourceAsStream("/messages.properties"));
+        mockUpdate(update);
+    }
+
     @Test
     @DisplayName("Тест TrackCommand.handleCommand(), когда команда /track и пользователь пытается добавить несколько ссылок")
     public void handleCommand_whenTryingToAddSeveralLinks_shouldReturnCorrectAnswer() {
-        Update update = Mockito.mock(Update.class);
-
-        DefaultBotService defaultBotService = Mockito.mock(DefaultBotService.class);
-
-        Properties properties = new Properties();
-        properties.load(getClass().getResourceAsStream("/messages.properties"));
-
-        mockUpdate(update);
-
         Mockito.when(update.message().text()).thenReturn(properties.getProperty("command.track.name") + " ya.ru google.com");
 
         TrackCommand trackCommand = new TrackCommand(properties, defaultBotService);
@@ -53,15 +57,6 @@ public class TrackCommandTest extends CommandTest {
     @Test
     @DisplayName("Тест TrackCommand.handleCommand(), когда команда /track и пользователь не указал ссылку после команду")
     public void handleCommand_whenMissingUrl_shouldReturnCorrectAnswer() {
-        Update update = Mockito.mock(Update.class);
-
-        DefaultBotService defaultBotService = Mockito.mock(DefaultBotService.class);
-
-        Properties properties = new Properties();
-        properties.load(getClass().getResourceAsStream("/messages.properties"));
-
-        mockUpdate(update);
-
         Mockito.when(update.message().text()).thenReturn(properties.getProperty("command.track.name"));
 
         TrackCommand trackCommand = new TrackCommand(properties, defaultBotService);
@@ -81,15 +76,7 @@ public class TrackCommandTest extends CommandTest {
     @Test
     @DisplayName("Тест TrackCommand.handleCommand(), когда команда /track и добавление прошло успешно")
     public void handleCommand_whenAddLinkIsSuccessful_shouldReturnCorrectAnswer() {
-        Update update = Mockito.mock(Update.class);
         String url = "ya.ru";
-
-        DefaultBotService defaultBotService = Mockito.mock(DefaultBotService.class);
-
-        Properties properties = new Properties();
-        properties.load(getClass().getResourceAsStream("/messages.properties"));
-
-        mockUpdate(update);
         Mockito.when(update.message().text()).thenReturn(properties.getProperty("command.track.name") + " " + url);
 
         AddLinkToDatabaseResponse response = new AddLinkToDatabaseResponse(update.message().chat().id(), new URI(url));
@@ -112,15 +99,8 @@ public class TrackCommandTest extends CommandTest {
     @Test
     @DisplayName("Тест TrackCommand.handleCommand(), когда команда /track и добавление не удалось по какой-то причине")
     public void handleCommand_whenAddLinkIsFailed_shouldReturnCorrectAnswer() {
-        Update update = Mockito.mock(Update.class);
         String url = "ya.ru";
         String errorDescription = "не получилось";
-        DefaultBotService defaultBotService = Mockito.mock(DefaultBotService.class);
-
-        Properties properties = new Properties();
-        properties.load(getClass().getResourceAsStream("/messages.properties"));
-
-        mockUpdate(update);
         Mockito.when(update.message().text()).thenReturn(properties.getProperty("command.track.name") + " " + url);
 
         GenericResponse<AddLinkToDatabaseResponse> addResponse = new GenericResponse<>(null, new ApiErrorResponse(

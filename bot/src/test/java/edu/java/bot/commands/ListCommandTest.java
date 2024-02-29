@@ -13,6 +13,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Properties;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -20,21 +21,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 public class ListCommandTest extends CommandTest {
+    private Update update;
+    private DefaultBotService botService;
+    private Properties properties;
+
+    @BeforeEach
+    @SneakyThrows
+    public void init() {
+        update = Mockito.mock(Update.class);
+        botService = Mockito.mock(DefaultBotService.class);
+        properties = new Properties();
+        properties.load(getClass().getResourceAsStream("/messages.properties"));
+        mockUpdate(update);
+    }
+
 
     @SneakyThrows
     @DisplayName("Тест ListCommand.handleCommand(), когда команда равна /list и список ссылок не пустой")
     @Test
     public void handleCommand_whenCommandIsList_and_linksListIsNotEmpty_shouldReturnCorrectMessage() {
-        Update update = Mockito.mock(Update.class);
-
-        DefaultBotService botService = Mockito.mock(DefaultBotService.class);
-
-        Properties properties = new Properties();
-        properties.load(getClass().getResourceAsStream("/messages.properties"));
-
-        mockUpdate(update);
-
         ListLinksResponse linksResponse = new ListLinksResponse(List.of(new Link(1L, new URI("ya.ru"))));
+
         GenericResponse<ListLinksResponse> response = new GenericResponse<>(linksResponse, null);
         Mockito.when(botService.listLinksFromDatabase(update.message().chat().id())).thenReturn(response);
 
@@ -46,7 +53,6 @@ public class ListCommandTest extends CommandTest {
         }
 
         SendMessage actual = listCommand.handleCommand(update);
-        System.out.println(actual.getParameters().get("text"));
         SendMessage expected = new SendMessage(
             update.message().chat().id(),
             properties.getProperty("command.list.listLinks.success")).replyMarkup(keyboardMarkup);
@@ -61,19 +67,9 @@ public class ListCommandTest extends CommandTest {
         assertThat(actualParameter.url()).isEqualTo(expectedParameter.url());
     }
 
-    @SneakyThrows
     @DisplayName("Тест ListCommand.handleCommand(), когда команда равна /list и список ссылок пустой")
     @Test
     public void handleCommand_whenCommandIsList_and_linksListIsEmpty_shouldReturnCorrectMessage() {
-        Update update = Mockito.mock(Update.class);
-
-        DefaultBotService botService = Mockito.mock(DefaultBotService.class);
-
-        Properties properties = new Properties();
-        properties.load(getClass().getResourceAsStream("/messages.properties"));
-
-        mockUpdate(update);
-
         ListLinksResponse linksResponse = new ListLinksResponse(List.of());
         GenericResponse<ListLinksResponse> response = new GenericResponse<>(linksResponse, null);
         Mockito.when(botService.listLinksFromDatabase(update.message().chat().id())).thenReturn(response);
@@ -97,15 +93,6 @@ public class ListCommandTest extends CommandTest {
     @Test
     @DisplayName("Тест ListCommand.handleCommand(), когда команда /list и не удалось получить список ссылок")
     public void handleCommand_whenCommandIsList_and_failedToGetListOfLinks() {
-        Update update = Mockito.mock(Update.class);
-
-        DefaultBotService botService = Mockito.mock(DefaultBotService.class);
-
-        Properties properties = new Properties();
-        properties.load(getClass().getResourceAsStream("/messages.properties"));
-
-        mockUpdate(update);
-
         String errorDescription = "не получилось";
         GenericResponse<ListLinksResponse> response = new GenericResponse<>(null, new ApiErrorResponse(
             errorDescription,

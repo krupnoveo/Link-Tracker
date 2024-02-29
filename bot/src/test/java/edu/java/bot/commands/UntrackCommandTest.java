@@ -16,27 +16,35 @@ import java.net.URI;
 import java.util.List;
 import java.util.Properties;
 import lombok.SneakyThrows;
+import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.event.annotation.BeforeTestMethod;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 public class UntrackCommandTest extends CommandTest {
+    private Update update;
+    private DefaultBotService botService;
+    private Properties properties;
+
+    @BeforeEach
+    @SneakyThrows
+    public void init() {
+        update = Mockito.mock(Update.class);
+        botService = Mockito.mock(DefaultBotService.class);
+        properties = new Properties();
+        properties.load(getClass().getResourceAsStream("/messages.properties"));
+    }
     @SneakyThrows
     @Test
     @DisplayName("Тест UntrackCommand.handleCommand(), когда пришло сообщение и в данный момент нет отслеживаемых ссылок")
     public void handleCommand_whenUpdateIsMessage_and_noTrackedLinks_shouldReturnCorrectAnswer() {
-        Update update = Mockito.mock(Update.class);
-
-        DefaultBotService botService = Mockito.mock(DefaultBotService.class);
-        Properties properties = new Properties();
-        properties.load(getClass().getResourceAsStream("/messages.properties"));
-
         mockUpdate(update);
-
         ListLinksResponse linksResponse = new ListLinksResponse(List.of());
         GenericResponse<ListLinksResponse> response = new GenericResponse<>(linksResponse, null);
         Mockito.when(botService.listLinksFromDatabase(update.message().chat().id())).thenReturn(response);
@@ -56,14 +64,7 @@ public class UntrackCommandTest extends CommandTest {
     @Test
     @DisplayName("Тест UntrackCommand.handleCommand(), когда пришло сообщение и в данный момент есть отслеживаемые ссылки")
     public void handleCommand_whenUpdateIsMessage_and_areTrackedLinks_shouldReturnCorrectAnswer() {
-        Update update = Mockito.mock(Update.class);
-
-        DefaultBotService botService = Mockito.mock(DefaultBotService.class);
-        Properties properties = new Properties();
-        properties.load(getClass().getResourceAsStream("/messages.properties"));
-
         mockUpdate(update);
-
         ListLinksResponse linksResponse = new ListLinksResponse(List.of(new Link(1L, new URI("ya.ru"))));
         GenericResponse<ListLinksResponse> response = new GenericResponse<>(linksResponse, null);
         Mockito.when(botService.listLinksFromDatabase(update.message().chat().id())).thenReturn(response);
@@ -99,14 +100,7 @@ public class UntrackCommandTest extends CommandTest {
     @Test
     @DisplayName("Тест UntrackCommand.handleCommand(), когда пришло сообщение и не удалось вывести список отслеживаемых ссылок")
     public void handleCommand_whenUpdateIsMessage_and_errorWhenListingLinks_shouldReturnCorrectAnswer() {
-        Update update = Mockito.mock(Update.class);
-
-        DefaultBotService botService = Mockito.mock(DefaultBotService.class);
-        Properties properties = new Properties();
-        properties.load(getClass().getResourceAsStream("/messages.properties"));
-
         mockUpdate(update);
-
         String errorDescription = "не получилось";
         GenericResponse<ListLinksResponse> response = new GenericResponse<>(null, new ApiErrorResponse(
             errorDescription,
@@ -123,19 +117,18 @@ public class UntrackCommandTest extends CommandTest {
             update.message().chat().id(),
             properties.getProperty("command.untrack.handleCommand.error").formatted(errorDescription)
         );
+        assertThat(actual.getParameters().get("text")).isEqualTo(expected.getParameters().get("text"));
+        assertThat(actual.getParameters().get("chat_id")).isEqualTo(expected.getParameters().get("chat_id"));
     }
 
     @SneakyThrows
     @Test
     @DisplayName("Тест UntrackCommand.handleCommand(), когда пришел колбэк и удаление ссылки прошло успешно")
     public void handleCommand_whenUpdateIsCallBack_and_UrlRemovedSuccessfully_shouldReturnCorrectAnswer() {
-        Update update = Mockito.mock(Update.class);
+        String url = "ya.ru";
         CallbackQuery callbackQuery = Mockito.mock(CallbackQuery.class);
         User user = Mockito.mock(User.class);
         long linkId = 1L;
-        DefaultBotService botService = Mockito.mock(DefaultBotService.class);
-        Properties properties = new Properties();
-        properties.load(getClass().getResourceAsStream("/messages.properties"));
 
         Mockito.when(update.callbackQuery()).thenReturn(callbackQuery);
         Mockito.when(update.callbackQuery().from()).thenReturn(user);
@@ -146,7 +139,6 @@ public class UntrackCommandTest extends CommandTest {
                 + linkId
         );
 
-        String url = "ya.ru";
         RemoveLinkFromDatabaseResponse removeResponse = new RemoveLinkFromDatabaseResponse(linkId, new URI(url));
         GenericResponse<RemoveLinkFromDatabaseResponse> response = new GenericResponse<>(removeResponse, null);
         Mockito.when(botService.removeLinkFromDatabase(linkId, update.callbackQuery().from().id())).thenReturn(response);
@@ -169,12 +161,8 @@ public class UntrackCommandTest extends CommandTest {
     public void handleCommand_whenUpdateIsCallBack_and_UrlRemovalFailed_shouldReturnCorrectAnswer() {
         long linkId = 1L;
         String errorDescription = "не получилось";
-        Update update = Mockito.mock(Update.class);
         CallbackQuery callbackQuery = Mockito.mock(CallbackQuery.class);
         User user = Mockito.mock(User.class);
-        DefaultBotService botService = Mockito.mock(DefaultBotService.class);
-        Properties properties = new Properties();
-        properties.load(getClass().getResourceAsStream("/messages.properties"));
 
         Mockito.when(update.callbackQuery()).thenReturn(callbackQuery);
         Mockito.when(update.callbackQuery().from()).thenReturn(user);
@@ -209,9 +197,6 @@ public class UntrackCommandTest extends CommandTest {
     @Test
     @DisplayName("Тест UntrackCommand.isSupportsUpdate(), когда пришли подходящие данные")
     public void isSupportsUpdate_whenUpdateHaveNecessaryData_shouldReturnTrue() {
-        DefaultBotService botService = Mockito.mock(DefaultBotService.class);
-        Update update = Mockito.mock(Update.class);
-        Properties properties = Mockito.mock(Properties.class);
         CallbackQuery callbackQuery = Mockito.mock(CallbackQuery.class);
         CommandHandler handler = new UntrackCommand(properties, botService);
 
@@ -224,9 +209,6 @@ public class UntrackCommandTest extends CommandTest {
     @Test
     @DisplayName("Тест UntrackCommand.isSupportsUpdate(), когда пришли неподходящие данные")
     public void isSupportsUpdate_whenUpdateNotHaveNecessaryData_shouldReturnFalse() {
-        DefaultBotService botService = Mockito.mock(DefaultBotService.class);
-        Update update = Mockito.mock(Update.class);
-        Properties properties = Mockito.mock(Properties.class);
         CallbackQuery callbackQuery = Mockito.mock(CallbackQuery.class);
         CommandHandler handler = new UntrackCommand(properties, botService);
 
