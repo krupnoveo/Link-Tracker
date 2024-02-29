@@ -43,6 +43,10 @@
         <!-- Linters -->
         <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
         <checkstyle.version>10.12.7</checkstyle.version>
+
+        <netty-resolver-dns-native-macos.version>4.1.107.Final</netty-resolver-dns-native-macos.version>
+
+        <openapi-starter-webmvc.version>2.3.0</openapi-starter-webmvc.version>
     </properties>
 
     <modules>
@@ -60,6 +64,11 @@
             <dependency>
                 <groupId>org.wiremock</groupId>
                 <artifactId>wiremock</artifactId>
+                <version>${wiremock.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wiremock</groupId>
+                <artifactId>wiremock-standalone</artifactId>
                 <version>${wiremock.version}</version>
             </dependency>
 
@@ -86,6 +95,13 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${openapi-starter-webmvc.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -118,6 +134,14 @@
             <artifactId>junit-jupiter-params</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-resolver-dns-native-macos</artifactId>
+            <version>${netty-resolver-dns-native-macos.version}</version>
+            <classifier>osx-aarch_64</classifier>
+            <scope>runtime</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

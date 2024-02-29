@@ -1,7 +1,9 @@
 app:
-  telegram-token: unset
+  telegram-token: ${TELEGRAM_TOKEN}
 
 spring:
+  config:
+    import: optional:file:.env[.properties]
   application:
     name: bot
   jackson:
@@ -12,3 +14,6 @@ server:
 
 logging:
   config: classpath:log4j2-plain.xml
+springdoc:
+  swagger-ui:
+    path: /swagger-ui
