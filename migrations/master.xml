@@ -10,13 +10,4 @@
     <include file="chat_table_scheme.sql"/>
     <include file="link_table_scheme.sql"/>
     <include file="chat_to_link_scheme.sql"/>
-<!--    <changeSet id="1" author="">-->
-<!--        <sqlFile path="chat_table_scheme.sql" relativeToChangelogFile="true"/>-->
-<!--    </changeSet>-->
-<!--    <changeSet id="2" author="">-->
-<!--        <sqlFile path="link_table_scheme.sql" relativeToChangelogFile="true"/>-->
-<!--    </changeSet>-->
-<!--    <changeSet id="3" author="">-->
-<!--        <sqlFile path="chat_to_link_scheme.sql" relativeToChangelogFile="true"/>-->
-<!--    </changeSet>-->
 </databaseChangeLog>
