@@ -3,7 +3,7 @@ package edu.java.scrapper.services;
 import edu.java.api.httpClient.BotClient;
 import edu.java.dto.GenericResponse;
 import edu.java.dto.LinkUpdate;
-import edu.java.services.DefaultScrapperService;
+import edu.java.clientService.DefaultScrapperService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

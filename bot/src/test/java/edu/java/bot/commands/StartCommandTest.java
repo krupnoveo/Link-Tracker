@@ -5,15 +5,13 @@ import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.api.dto.response.ApiErrorResponse;
 import edu.java.bot.models.GenericResponse;
 import edu.java.bot.models.User;
-import edu.java.bot.service.DefaultBotService;
+import edu.java.bot.clientService.DefaultBotService;
 import java.util.List;
 import java.util.Properties;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class StartCommandTest extends CommandTest {

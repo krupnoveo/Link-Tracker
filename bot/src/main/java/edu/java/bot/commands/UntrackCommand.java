@@ -9,7 +9,7 @@ import edu.java.bot.models.GenericResponse;
 import edu.java.bot.models.Link;
 import edu.java.bot.models.ListLinksResponse;
 import edu.java.bot.models.RemoveLinkFromDatabaseResponse;
-import edu.java.bot.service.BotService;
+import edu.java.bot.clientService.BotService;
 import java.util.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

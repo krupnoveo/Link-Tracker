@@ -1,4 +1,4 @@
-package edu.java.bot.service;
+package edu.java.bot.clientService;
 
 import edu.java.bot.models.AddLinkToDatabaseResponse;
 import edu.java.bot.models.GenericResponse;

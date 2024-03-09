@@ -5,7 +5,7 @@ import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.models.GenericResponse;
 import edu.java.bot.models.User;
-import edu.java.bot.service.BotService;
+import edu.java.bot.clientService.BotService;
 import java.util.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

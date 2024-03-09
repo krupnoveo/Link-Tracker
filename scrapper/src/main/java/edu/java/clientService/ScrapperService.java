@@ -1,4 +1,4 @@
-package edu.java.services;
+package edu.java.clientService;
 
 import edu.java.dto.GenericResponse;
 import edu.java.dto.LinkUpdate;
