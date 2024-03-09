@@ -1,17 +1,17 @@
 package edu.java.bot.service;
 
 import edu.java.bot.models.AddLinkToDatabaseResponse;
+import edu.java.bot.models.GenericResponse;
 import edu.java.bot.models.ListLinksResponse;
 import edu.java.bot.models.RemoveLinkFromDatabaseResponse;
 import edu.java.bot.models.User;
-import java.util.UUID;
 
 public interface BotService {
-    boolean registerUser(User user);
+    GenericResponse<Void> registerUser(User user);
 
-    AddLinkToDatabaseResponse addLinkToDatabase(String url, Long userId);
+    GenericResponse<AddLinkToDatabaseResponse> addLinkToDatabase(String url, long chatId);
 
-    RemoveLinkFromDatabaseResponse removeLinkFromDatabase(UUID uuid, Long userId);
+    GenericResponse<RemoveLinkFromDatabaseResponse> removeLinkFromDatabase(long linkId, long chatId);
 
-    ListLinksResponse listLinksFromDatabase(Long userId);
+    GenericResponse<ListLinksResponse> listLinksFromDatabase(long chatId);
 }

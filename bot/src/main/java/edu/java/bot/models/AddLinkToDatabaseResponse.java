@@ -1,3 +1,5 @@
 package edu.java.bot.models;
 
-public record AddLinkToDatabaseResponse(boolean status, String responseFromDatabase) {}
+import java.net.URI;
+
+public record AddLinkToDatabaseResponse(long id, URI url) {}
