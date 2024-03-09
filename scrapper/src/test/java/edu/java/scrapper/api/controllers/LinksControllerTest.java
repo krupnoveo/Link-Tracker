@@ -6,7 +6,7 @@ import edu.java.api.dto.request.AddLinkRequest;
 import edu.java.api.dto.request.RemoveLinkRequest;
 import edu.java.api.dto.response.LinkResponse;
 import edu.java.api.dto.response.ListLinksResponse;
-import edu.java.api.services.LinksService;
+import edu.java.api.services.jdbc.JdbcLinksService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ public class LinksControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private LinksService service;
+    private JdbcLinksService service;
 
     @Autowired
     private ObjectMapper objectMapper;
