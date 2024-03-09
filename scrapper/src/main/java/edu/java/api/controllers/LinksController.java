@@ -4,7 +4,7 @@ import edu.java.api.dto.request.AddLinkRequest;
 import edu.java.api.dto.request.RemoveLinkRequest;
 import edu.java.api.dto.response.LinkResponse;
 import edu.java.api.dto.response.ListLinksResponse;
-import edu.java.api.services.LinksService;
+import edu.java.api.services.jdbc.JdbcLinksService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/links")
 @RequiredArgsConstructor
 public class LinksController {
-    private final LinksService service;
+    private final JdbcLinksService service;
     private final static String REQUEST_HEADER_NAME = "Tg-Chat-Id";
 
     @GetMapping
