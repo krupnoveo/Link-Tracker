@@ -4,7 +4,15 @@ app:
     interval: 5s
     force-check-delay: 10s
 
+
+database:
+  url: ${DATABASE_URL}
+  user-name: ${DATABASE_USERNAME}
+  password: ${DATABASE_PASSWORD}
+
 spring:
+  config:
+    import: optional:file:.env[.properties]
   application:
     name: scrapper
 
