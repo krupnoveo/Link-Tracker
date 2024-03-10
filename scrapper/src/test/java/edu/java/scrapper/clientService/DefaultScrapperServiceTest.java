@@ -1,8 +1,8 @@
-package edu.java.scrapper.services;
+package edu.java.scrapper.clientService;
 
 import edu.java.api.httpClient.BotClient;
-import edu.java.dto.GenericResponse;
-import edu.java.dto.LinkUpdate;
+import edu.java.models.GenericResponse;
+import edu.java.models.LinkUpdate;
 import edu.java.clientService.DefaultScrapperService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
