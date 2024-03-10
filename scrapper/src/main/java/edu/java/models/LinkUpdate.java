@@ -1,4 +1,4 @@
-package edu.java.dto;
+package edu.java.models;
 
 import java.net.URI;
 import java.util.List;

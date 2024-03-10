@@ -1,4 +1,4 @@
-package edu.java.dto;
+package edu.java.models;
 
 import edu.java.api.dto.response.ApiErrorResponse;
 
