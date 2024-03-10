@@ -3,8 +3,8 @@ package edu.java.bot.commands;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.api.dto.response.ApiErrorResponse;
+import edu.java.bot.models.Chat;
 import edu.java.bot.models.GenericResponse;
-import edu.java.bot.models.User;
 import edu.java.bot.clientService.DefaultBotService;
 import java.util.List;
 import java.util.Properties;
@@ -50,11 +50,11 @@ public class StartCommandTest extends CommandTest {
         GenericResponse<Void> success = new GenericResponse<>(null, null);
         if (isSuccessful) {
             Mockito.when(botService.registerUser(
-                new User(update.message().chat().id()))
+                new Chat(update.message().chat().id()))
             ).thenReturn(success);
         } else {
             Mockito.when(botService.registerUser(
-                new User(update.message().chat().id()))
+                new Chat(update.message().chat().id()))
             ).thenReturn(fail);
         }
 

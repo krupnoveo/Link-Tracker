@@ -4,10 +4,10 @@ import edu.java.bot.api.dto.request.AddLinkRequest;
 import edu.java.bot.api.dto.request.RemoveLinkRequest;
 import edu.java.bot.api.httpClient.ScrapperClient;
 import edu.java.bot.models.AddLinkToDatabaseResponse;
+import edu.java.bot.models.Chat;
 import edu.java.bot.models.GenericResponse;
 import edu.java.bot.models.ListLinksResponse;
 import edu.java.bot.models.RemoveLinkFromDatabaseResponse;
-import edu.java.bot.models.User;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -19,8 +19,8 @@ public class DefaultBotService implements BotService {
     private final ScrapperClient scrapperClient;
 
     @Override
-    public GenericResponse<Void> registerUser(User user) {
-        return scrapperClient.registerChat(user);
+    public GenericResponse<Void> registerUser(Chat chat) {
+        return scrapperClient.registerChat(chat);
     }
 
     @Override

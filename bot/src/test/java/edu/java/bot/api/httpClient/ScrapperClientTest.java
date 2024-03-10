@@ -9,7 +9,7 @@ import edu.java.bot.models.GenericResponse;
 import edu.java.bot.models.Link;
 import edu.java.bot.models.ListLinksResponse;
 import edu.java.bot.models.RemoveLinkFromDatabaseResponse;
-import edu.java.bot.models.User;
+import edu.java.bot.models.Chat;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,7 +40,7 @@ public class ScrapperClientTest {
         );
         server.start();
         ScrapperClient client = new ScrapperClient(server.baseUrl());
-        GenericResponse<Void> actual = client.registerChat(new User(1L));
+        GenericResponse<Void> actual = client.registerChat(new Chat(1L));
 
         assertThat(actual.errorResponse()).isNull();
         assertThat(actual.response()).isNull();
@@ -70,7 +70,7 @@ public class ScrapperClientTest {
         );
         server.start();
         ScrapperClient client = new ScrapperClient(server.baseUrl());
-        GenericResponse<Void> actual = client.registerChat(new User(1L));
+        GenericResponse<Void> actual = client.registerChat(new Chat(1L));
         GenericResponse<Void> expected = new GenericResponse<>(null, new ApiErrorResponse(
             "string",
             "string",
@@ -95,7 +95,7 @@ public class ScrapperClientTest {
         );
         server.start();
         ScrapperClient client = new ScrapperClient(server.baseUrl());
-        GenericResponse<Void> actual = client.deleteChat(new User(1L));
+        GenericResponse<Void> actual = client.deleteChat(new Chat(1L));
 
         assertThat(actual.errorResponse()).isNull();
         assertThat(actual.response()).isNull();
@@ -125,7 +125,7 @@ public class ScrapperClientTest {
         );
         server.start();
         ScrapperClient client = new ScrapperClient(server.baseUrl());
-        GenericResponse<Void> actual = client.deleteChat(new User(1L));
+        GenericResponse<Void> actual = client.deleteChat(new Chat(1L));
         GenericResponse<Void> expected = new GenericResponse<>(null, new ApiErrorResponse(
             "string",
             "string",
