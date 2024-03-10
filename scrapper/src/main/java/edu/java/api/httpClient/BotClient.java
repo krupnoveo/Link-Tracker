@@ -1,8 +1,8 @@
 package edu.java.api.httpClient;
 
 import edu.java.api.dto.response.ApiErrorResponse;
-import edu.java.dto.GenericResponse;
-import edu.java.dto.LinkUpdate;
+import edu.java.models.GenericResponse;
+import edu.java.models.LinkUpdate;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 

@@ -7,7 +7,7 @@ import java.net.URL;
 import java.time.OffsetDateTime;
 import java.util.List;
 import edu.java.clientsHolder.ClientsHolder;
-import edu.java.dto.LinkData;
+import edu.java.models.LinkData;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

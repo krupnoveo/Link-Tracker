@@ -1,8 +1,8 @@
 package edu.java.clientService;
 
 import edu.java.api.httpClient.BotClient;
-import edu.java.dto.GenericResponse;
-import edu.java.dto.LinkUpdate;
+import edu.java.models.GenericResponse;
+import edu.java.models.LinkUpdate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

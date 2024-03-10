@@ -1,7 +1,7 @@
 package edu.java.clientsHolder;
 
 import edu.java.clients.BaseClient;
-import edu.java.dto.LinkData;
+import edu.java.models.LinkData;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;

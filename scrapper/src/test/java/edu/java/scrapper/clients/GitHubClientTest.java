@@ -2,7 +2,7 @@ package edu.java.scrapper.clients;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import edu.java.clients.GitHubClient;
-import edu.java.dto.LinkData;
+import edu.java.models.LinkData;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;

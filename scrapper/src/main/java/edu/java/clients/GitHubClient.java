@@ -1,7 +1,7 @@
 package edu.java.clients;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import edu.java.dto.LinkData;
+import edu.java.models.LinkData;
 import java.net.URL;
 import java.time.OffsetDateTime;
 import java.util.regex.Matcher;
