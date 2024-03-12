@@ -18,7 +18,7 @@ services:
     command:
       - --changelog-file=master.xml
       - --driver=org.postgresql.Driver
-      - --url=${DATABASE_URL}
+      - --url=jdbc:postgresql://postgresql:5432/scrapper
       - --username=${DATABASE_USERNAME}
       - --password=${DATABASE_PASSWORD}
       - update
