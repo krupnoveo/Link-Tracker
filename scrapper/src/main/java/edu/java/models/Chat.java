@@ -1,4 +1,4 @@
 package edu.java.models;
 
-public class Chat {
+public record Chat(long chatId) {
 }
