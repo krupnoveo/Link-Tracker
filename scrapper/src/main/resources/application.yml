@@ -4,11 +4,11 @@ app:
     interval: 5s
     force-check-delay: 10s
 
-
-database:
-  url: ${DATABASE_URL}
-  user-name: ${DATABASE_USERNAME}
-  password: ${DATABASE_PASSWORD}
+clients:
+  github:
+    base-url: https://api.github.com
+  stackoverflow:
+    base-url: https://api.stackexchange.com/2.3
 
 spring:
   config:
