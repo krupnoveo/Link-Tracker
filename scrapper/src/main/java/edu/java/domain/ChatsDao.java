@@ -1,5 +1,6 @@
 package edu.java.domain;
 
+import edu.java.models.Chat;
 import java.util.List;
 
 
@@ -8,5 +9,5 @@ public interface ChatsDao {
 
     void remove(long id);
 
-    List<Long> findAll();
+    List<Chat> findAll();
 }
