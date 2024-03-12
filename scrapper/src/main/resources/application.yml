@@ -3,6 +3,7 @@ app:
     enable: true
     interval: 5s
     force-check-delay: 10s
+  git-hub-token: ${GITHUB_TOKEN}
 
 clients:
   github:
