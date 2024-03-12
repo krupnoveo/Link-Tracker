@@ -13,11 +13,6 @@ public class StackOverflowClient extends BaseClient {
     private final static String HOST = "stackoverflow.com";
     private final static Pattern URL_PATTERN = Pattern.compile("https://" + HOST + "/questions/\\d+/[\\w-]+");
 
-
-    public StackOverflowClient() {
-        this(BASE_URL);
-    }
-
     public StackOverflowClient(String url) {
         super(url);
     }
