@@ -1,13 +1,18 @@
 package edu.java.domain;
 
+import edu.java.api.dto.response.LinkResponse;
 import java.net.URI;
+import java.time.OffsetDateTime;
 import java.util.List;
-import javafx.util.Pair;
 
 public interface LinksDao {
-    long add(URI uri);
+    long add(URI uri, OffsetDateTime lastUpdated, OffsetDateTime lastChecked);
 
     URI remove(long id);
 
-    List<Pair<Long, URI>> findAll();
+    List<LinkResponse> findAll();
+
+    URI getUriById(long id);
+
+    void removeAll(List<LinkResponse> notTrackedLinks);
 }
