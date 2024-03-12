@@ -5,11 +5,11 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.clientService.BotService;
 import edu.java.bot.models.GenericResponse;
 import edu.java.bot.models.Link;
 import edu.java.bot.models.ListLinksResponse;
 import edu.java.bot.models.RemoveLinkFromDatabaseResponse;
-import edu.java.bot.clientService.BotService;
 import java.util.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -58,10 +58,11 @@ public class UntrackCommand extends CommandHandler {
                 properties.getProperty("command.untrack.chooseLinkToRemove")
             ).parseMode(ParseMode.Markdown).replyMarkup(keyboardMarkup);
         }
+        String responseErrorDescription = response.errorResponse().description();
         return new SendMessage(
             chatId,
             properties.getProperty("command.untrack.handleCommand.error")
-                .formatted(response.errorResponse().description().toLowerCase())
+                .formatted(responseErrorDescription != null ? responseErrorDescription.toLowerCase() : "")
         );
     }
 
@@ -78,10 +79,11 @@ public class UntrackCommand extends CommandHandler {
                     .formatted(response.response().url())
             );
         }
+        String responseErrorDescription = response.errorResponse().description();
         return new SendMessage(
             chatId,
             properties.getProperty("command.untrack.removeURL.fail")
-                .formatted(response.errorResponse().description().toLowerCase())
+                .formatted(responseErrorDescription != null ? responseErrorDescription.toLowerCase() : "")
         );
     }
 
