@@ -3,6 +3,7 @@ package edu.java.domain.repository;
 import edu.java.api.dto.response.LinkResponse;
 import edu.java.api.exceptions.LinkNotFoundException;
 import edu.java.domain.LinksDao;
+import edu.java.models.LinkDatabaseInformation;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -19,6 +20,14 @@ public class JdbcLinksRepository implements LinksDao {
     private static final String INSERT_WITH_URL_AND_UPDATED_AT_AND_CHECKED_AT =
         "INSERT INTO link(url, updated_at, checked_at) values(?,?,?)";
     private static final String DELETE_BY_ID = "DELETE FROM link WHERE id=?";
+
+    private static final String SELECT_ID_URL_UPDATED_AT_BY_TIME_CRITERIA =
+        "SELECT id as urlId,url,updated_at as lastUpdated FROM link WHERE checked_at < ? ORDER BY checked_at";
+    private static final String UPDATE_UPDATED_AT_LAST_CHECKED = """
+        UPDATE link
+        SET updated_at=?, checked_at=?
+        WHERE id=?;
+        """;
     private final JdbcClient client;
 
     @Autowired
@@ -95,5 +104,26 @@ public class JdbcLinksRepository implements LinksDao {
                 .param(link.id())
                 .update();
         }
+    }
+
+    @Override
+    @Transactional
+    public List<LinkDatabaseInformation> getAllLinksWhichWereNotCheckedForNminutes(OffsetDateTime criteria) {
+        return client.sql(SELECT_ID_URL_UPDATED_AT_BY_TIME_CRITERIA)
+            .param(criteria)
+            .query(LinkDatabaseInformation.class)
+            .list();
+    }
+
+    @Override
+    @Transactional
+    public void updateLinkInformationInDatabase(OffsetDateTime lastUpdated, OffsetDateTime lastChecked, long urlId) {
+        client.sql(UPDATE_UPDATED_AT_LAST_CHECKED)
+            .params(List.of(
+                lastUpdated,
+                lastChecked,
+                urlId
+            ))
+            .update();
     }
 }

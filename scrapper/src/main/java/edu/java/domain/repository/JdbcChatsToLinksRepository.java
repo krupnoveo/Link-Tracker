@@ -4,6 +4,7 @@ import edu.java.api.dto.response.LinkResponse;
 import edu.java.api.exceptions.LinkAlreadyTrackedException;
 import edu.java.api.exceptions.LinkNotFoundException;
 import edu.java.domain.ChatsToLinksDao;
+import edu.java.models.Chat;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,16 +17,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class JdbcChatsToLinksRepository implements ChatsToLinksDao {
     private static final String SELECT_CHAT_ID_BY_CHAT_ID_AND_LINK_ID =
         "SELECT chat_id FROM chat_to_link WHERE chat_id=? AND link_id=?";
-    private static final String INSERT_WITH_CHAT_ID_AND_LINK_ID =
-        "INSERT INTO chat_to_link(chat_id, link_id) values(?, ?)";
-    private static final String DELETE_BY_CHAT_ID_AND_LINK_ID =
-        "DELETE FROM chat_to_link WHERE chat_id=? AND link_id=?";
     private static final String SELECT_LINK_ID_BY_CHAT_ID =
         "SELECT link_id FROM chat_to_link WHERE chat_id=?";
     private static final String SELECT_ID_AND_URL_BY_ID =
         "SELECT id, url FROM link WHERE id=?";
     private static final String SELECT_CHAT_ID_BY_LINK_ID =
         "SELECT chat_id FROM chat_to_link WHERE link_id=?";
+    private static final String INSERT_WITH_CHAT_ID_AND_LINK_ID =
+        "INSERT INTO chat_to_link(chat_id, link_id) values(?, ?)";
+    private static final String DELETE_BY_CHAT_ID_AND_LINK_ID =
+        "DELETE FROM chat_to_link WHERE chat_id=? AND link_id=?";
     private static final String DELETE_BY_CHAT_ID =
         "DELETE FROM chat_to_link WHERE chat_id=?";
     private final JdbcClient client;
@@ -97,6 +98,14 @@ public class JdbcChatsToLinksRepository implements ChatsToLinksDao {
             .param(chatId)
             .update();
         return getLinksWhichNotTrackedByAnybody(links);
+    }
+
+    @Override
+    public List<Chat> getChatsForLink(long urlId) {
+        return client.sql(SELECT_CHAT_ID_BY_LINK_ID)
+            .param(urlId)
+            .query(Chat.class)
+            .list();
     }
 
     private List<LinkResponse> getLinksConnectedToChat(long chatId) {
