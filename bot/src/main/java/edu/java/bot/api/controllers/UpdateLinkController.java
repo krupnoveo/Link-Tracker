@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
 @Log4j2
 @RestController
@@ -20,7 +21,7 @@ public class UpdateLinkController {
 
     @PostMapping
     @Operation(summary = "Отправить обновление")
-    public void updateLinks(@RequestBody @Valid LinkUpdate linkUpdate) {
-        service.notifyUsers(linkUpdate);
+    public void updateLinks(@RequestBody @Valid List<LinkUpdate> linkUpdates) {
+        service.notifyUsers(linkUpdates);
     }
 }

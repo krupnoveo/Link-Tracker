@@ -3,6 +3,7 @@ package edu.java.api.httpClient;
 import edu.java.api.dto.response.ApiErrorResponse;
 import edu.java.models.GenericResponse;
 import edu.java.models.LinkUpdate;
+import java.util.List;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -24,11 +25,11 @@ public class BotClient {
         this.webClient = WebClient.create(baseUrl);
     }
 
-    public GenericResponse<Void> updateLinks(LinkUpdate linkUpdate) {
+    public GenericResponse<Void> notifyChats(List<LinkUpdate> linkUpdates) {
         var clientResponse = webClient
             .post()
             .uri(PATH_FOR_UPDATE_LINKS_CONTROLLER)
-            .bodyValue(linkUpdate)
+            .bodyValue(linkUpdates)
             .exchangeToMono(response -> {
                 if (response.statusCode().is2xxSuccessful()) {
                     return response.bodyToMono(Void.class);
