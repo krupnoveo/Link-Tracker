@@ -3,14 +3,17 @@ package edu.java.clients;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.java.configuration.ApplicationConfig;
 import edu.java.models.LinkData;
+
 import java.net.URL;
 import java.time.OffsetDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.reactive.function.client.WebClient;
 
 public class GitHubClient extends BaseClient {
+
     private final static String HOST = "github.com";
     private final static Pattern URL_PATTERN = Pattern.compile("https://" + HOST + "/[\\w-]+/[\\w-]+");
 
