@@ -2,7 +2,7 @@ package edu.java.domain.repository;
 
 import edu.java.api.dto.response.LinkResponse;
 import edu.java.api.exceptions.LinkNotFoundException;
-import edu.java.domain.LinksDao;
+import edu.java.domain.LinksRepository;
 import edu.java.models.LinkDatabaseInformation;
 import java.net.URI;
 import java.time.OffsetDateTime;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public class JdbcLinksRepository implements LinksDao {
+public class JdbcLinksRepository implements LinksRepository {
     private static final String SELECT_ID_BY_URL = "SELECT id FROM link WHERE url=?";
     private static final String SELECT_URL_BY_ID = "SELECT url FROM link WHERE id=?";
     private static final String SELECT_ID_AND_URL = "SELECT id, url FROM link";
@@ -108,7 +108,7 @@ public class JdbcLinksRepository implements LinksDao {
 
     @Override
     @Transactional
-    public List<LinkDatabaseInformation> getAllLinksWhichWereNotCheckedForNminutes(OffsetDateTime criteria) {
+    public List<LinkDatabaseInformation> getAllLinksWhichWereNotCheckedBeforeDateTimeCriteria(OffsetDateTime criteria) {
         return client.sql(SELECT_ID_URL_UPDATED_AT_BY_TIME_CRITERIA)
             .param(criteria)
             .query(LinkDatabaseInformation.class)

@@ -5,7 +5,7 @@ import edu.java.models.Chat;
 import java.net.URI;
 import java.util.List;
 
-public interface ChatsToLinksDao {
+public interface ChatsToLinksRepository {
     void add(long chatId, long linkId, URI uri);
 
     void remove(long chatId, long linkId, URI uri);

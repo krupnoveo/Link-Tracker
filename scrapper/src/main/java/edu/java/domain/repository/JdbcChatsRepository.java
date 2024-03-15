@@ -2,7 +2,7 @@ package edu.java.domain.repository;
 
 import edu.java.api.exceptions.ChatAlreadyRegisteredException;
 import edu.java.api.exceptions.ChatDoesNotExistException;
-import edu.java.domain.ChatsDao;
+import edu.java.domain.ChatsRepository;
 import edu.java.models.Chat;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public class JdbcChatRepository implements ChatsDao {
+public class JdbcChatsRepository implements ChatsRepository {
     private static final String SELECT_BY_ID = "SELECT * FROM chat WHERE chat_id=?";
     private static final String SELECT_BY_ALL = "SELECT * FROM chat";
     private static final String INSERT_WITH_CHAT_ID = "INSERT INTO chat(chat_id) values(?)";
@@ -19,7 +19,7 @@ public class JdbcChatRepository implements ChatsDao {
     private final JdbcClient client;
 
     @Autowired
-    public JdbcChatRepository(JdbcClient client) {
+    public JdbcChatsRepository(JdbcClient client) {
         this.client = client;
     }
 

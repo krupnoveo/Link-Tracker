@@ -6,8 +6,8 @@ import edu.java.api.dto.response.LinkResponse;
 import edu.java.api.dto.response.ListLinksResponse;
 import edu.java.api.services.LinksService;
 import edu.java.clientsHolder.ClientsHolder;
-import edu.java.domain.repository.JdbcChatsToLinksRepository;
-import edu.java.domain.repository.JdbcLinksRepository;
+import edu.java.domain.ChatsToLinksRepository;
+import edu.java.domain.LinksRepository;
 import edu.java.models.LinkData;
 import java.net.URI;
 import java.time.OffsetDateTime;
@@ -20,21 +20,21 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class JdbcLinksService implements LinksService {
-    private final JdbcLinksRepository jdbcLinksRepository;
-    private final JdbcChatsToLinksRepository jdbcChatsToLinksRepository;
+    private final LinksRepository linksRepository;
+    private final ChatsToLinksRepository chatsToLinksRepository;
     private final ClientsHolder clientsHolder;
 
     @SneakyThrows
     public ListLinksResponse getTrackedLinks(long chatId) {
         log.info("Getting tracked links...");
-        return new ListLinksResponse(jdbcChatsToLinksRepository.findAllByChatId(chatId));
+        return new ListLinksResponse(chatsToLinksRepository.findAllByChatId(chatId));
     }
 
     public LinkResponse addLinkToTracking(long chatId, AddLinkRequest addLinkRequest) {
         log.info("Adding link...");
         URI uri = addLinkRequest.link();
-        long linkId = jdbcLinksRepository.add(uri, getOffsetDateTimeFromLink(uri), OffsetDateTime.now());
-        jdbcChatsToLinksRepository.add(chatId, linkId, uri);
+        long linkId = linksRepository.add(uri, getOffsetDateTimeFromLink(uri), OffsetDateTime.now());
+        chatsToLinksRepository.add(chatId, linkId, uri);
         return new LinkResponse(linkId, uri);
     }
 
@@ -42,10 +42,10 @@ public class JdbcLinksService implements LinksService {
     public LinkResponse removeLinkFromTracking(long chatId, RemoveLinkRequest removeLinkRequest) {
         log.info("Deleting link...");
         long linkId = removeLinkRequest.linkId();
-        URI uri = jdbcLinksRepository.getUriById(linkId);
-        jdbcChatsToLinksRepository.remove(chatId, linkId, uri);
-        if (!jdbcChatsToLinksRepository.isLinkTrackedByAnybody(linkId)) {
-            jdbcLinksRepository.remove(linkId);
+        URI uri = linksRepository.getUriById(linkId);
+        chatsToLinksRepository.remove(chatId, linkId, uri);
+        if (!chatsToLinksRepository.isLinkTrackedByAnybody(linkId)) {
+            linksRepository.remove(linkId);
         }
         return new LinkResponse(linkId, uri);
     }

@@ -2,9 +2,9 @@ package edu.java.api.services.jdbc;
 
 import edu.java.api.dto.response.LinkResponse;
 import edu.java.api.services.ChatService;
-import edu.java.domain.repository.JdbcChatRepository;
-import edu.java.domain.repository.JdbcChatsToLinksRepository;
-import edu.java.domain.repository.JdbcLinksRepository;
+import edu.java.domain.ChatsRepository;
+import edu.java.domain.ChatsToLinksRepository;
+import edu.java.domain.LinksRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -14,19 +14,19 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class JdbcChatService implements ChatService {
-    private final JdbcChatRepository jdbcChatRepository;
-    private final JdbcLinksRepository jdbcLinksRepository;
-    private final JdbcChatsToLinksRepository jdbcChatsToLinksRepository;
+    private final ChatsRepository chatRepository;
+    private final LinksRepository linksRepository;
+    private final ChatsToLinksRepository chatsToLinksRepository;
 
     public void registerChat(long chatId) {
         log.info("Registering chat...");
-        jdbcChatRepository.add(chatId);
+        chatRepository.add(chatId);
     }
 
     public void deleteChat(long chatId) {
         log.info("Deleting chat...");
-        List<LinkResponse> notTrackedByAnyoneLinks = jdbcChatsToLinksRepository.removeChatAndAllConnectedLinks(chatId);
-        jdbcChatRepository.remove(chatId);
-        jdbcLinksRepository.removeAll(notTrackedByAnyoneLinks);
+        List<LinkResponse> notTrackedByAnyoneLinks = chatsToLinksRepository.removeChatAndAllConnectedLinks(chatId);
+        chatRepository.remove(chatId);
+        linksRepository.removeAll(notTrackedByAnyoneLinks);
     }
 }

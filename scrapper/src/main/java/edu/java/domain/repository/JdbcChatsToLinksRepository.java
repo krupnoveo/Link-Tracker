@@ -1,9 +1,10 @@
 package edu.java.domain.repository;
 
 import edu.java.api.dto.response.LinkResponse;
+import edu.java.api.exceptions.ChatDoesNotExistException;
 import edu.java.api.exceptions.LinkAlreadyTrackedException;
 import edu.java.api.exceptions.LinkNotFoundException;
-import edu.java.domain.ChatsToLinksDao;
+import edu.java.domain.ChatsToLinksRepository;
 import edu.java.models.Chat;
 import java.net.URI;
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public class JdbcChatsToLinksRepository implements ChatsToLinksDao {
+public class JdbcChatsToLinksRepository implements ChatsToLinksRepository {
     private static final String SELECT_CHAT_ID_BY_CHAT_ID_AND_LINK_ID =
         "SELECT chat_id FROM chat_to_link WHERE chat_id=? AND link_id=?";
     private static final String SELECT_LINK_ID_BY_CHAT_ID =
@@ -93,6 +94,9 @@ public class JdbcChatsToLinksRepository implements ChatsToLinksDao {
     @Override
     @Transactional
     public List<LinkResponse> removeChatAndAllConnectedLinks(long chatId) {
+        if (client.sql(SELECT_LINK_ID_BY_CHAT_ID).param(chatId).query(Long.class).list().isEmpty()) {
+            throw new ChatDoesNotExistException(chatId);
+        }
         List<LinkResponse> links = getLinksConnectedToChat(chatId);
         client.sql(DELETE_BY_CHAT_ID)
             .param(chatId)

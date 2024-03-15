@@ -37,7 +37,7 @@ public class LinkUpdatesScheduler {
             List<Chat> chats = service.getChatsForLink(link.urlId());
             if (!chats.isEmpty()) {
                 OffsetDateTime lastUpdated = service.getUpdatedTimeOfUrl(link.url());
-                if (lastUpdated != null && lastUpdated.isAfter(link.lastUpdated())) {
+                if (link.lastUpdated() != null && lastUpdated != null && lastUpdated.isAfter(link.lastUpdated())) {
                     service.updateLinkInformationInDatabase(lastUpdated, OffsetDateTime.now(), link.urlId());
                     updates.add(new LinkUpdate(
                             link.urlId(),

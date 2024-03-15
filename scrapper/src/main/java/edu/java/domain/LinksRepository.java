@@ -6,7 +6,7 @@ import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-public interface LinksDao {
+public interface LinksRepository {
     long add(URI uri, OffsetDateTime lastUpdated, OffsetDateTime lastChecked);
 
     URI remove(long id);
@@ -17,7 +17,7 @@ public interface LinksDao {
 
     void removeAll(List<LinkResponse> notTrackedLinks);
 
-    List<LinkDatabaseInformation> getAllLinksWhichWereNotCheckedForNminutes(OffsetDateTime criteria);
+    List<LinkDatabaseInformation> getAllLinksWhichWereNotCheckedBeforeDateTimeCriteria(OffsetDateTime criteria);
 
     void updateLinkInformationInDatabase(OffsetDateTime lastUpdated, OffsetDateTime lastChecked, long urlId);
 }

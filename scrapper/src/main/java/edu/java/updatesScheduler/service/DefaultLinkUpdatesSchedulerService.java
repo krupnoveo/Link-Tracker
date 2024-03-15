@@ -1,8 +1,8 @@
 package edu.java.updatesScheduler.service;
 
 import edu.java.clientsHolder.ClientsHolder;
-import edu.java.domain.ChatsToLinksDao;
-import edu.java.domain.LinksDao;
+import edu.java.domain.ChatsToLinksRepository;
+import edu.java.domain.LinksRepository;
 import edu.java.models.Chat;
 import edu.java.models.LinkDatabaseInformation;
 import java.net.URI;
@@ -14,13 +14,13 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class DefaultLinkUpdatesSchedulerService implements LinkUpdatesSchedulerService {
-    private final LinksDao linksRepository;
-    private final ChatsToLinksDao chatsToLinksRepository;
+    private final LinksRepository linksRepository;
+    private final ChatsToLinksRepository chatsToLinksRepository;
     private final ClientsHolder clientsHolder;
 
     @Override
     public List<LinkDatabaseInformation> getAllLinksWhichWereNotCheckedForNminutes(OffsetDateTime criteria) {
-        return linksRepository.getAllLinksWhichWereNotCheckedForNminutes(criteria);
+        return linksRepository.getAllLinksWhichWereNotCheckedBeforeDateTimeCriteria(criteria);
     }
 
     @Override
