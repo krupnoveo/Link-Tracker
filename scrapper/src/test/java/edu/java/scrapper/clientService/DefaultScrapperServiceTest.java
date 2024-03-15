@@ -26,10 +26,10 @@ public class DefaultScrapperServiceTest {
             List.of()
         );
         GenericResponse<Void> response = new GenericResponse<>(null, null);
-        Mockito.when(botClient.updateLinks(update)).thenReturn(response);
+        Mockito.when(botClient.notifyChats(List.of(update))).thenReturn(response);
 
         DefaultScrapperService defaultScrapperService = new DefaultScrapperService(botClient);
-        GenericResponse<Void> actual = defaultScrapperService.updateLinks(update);
+        GenericResponse<Void> actual = defaultScrapperService.notifyChats(List.of(update));
         GenericResponse<Void> expected = new GenericResponse<>(null , null);
         assertThat(actual).isEqualTo(expected);
     }

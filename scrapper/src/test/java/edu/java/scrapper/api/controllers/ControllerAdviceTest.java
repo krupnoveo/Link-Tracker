@@ -12,7 +12,7 @@ import edu.java.api.exceptions.IncorrectRequestParametersException;
 import edu.java.api.exceptions.InvalidUrlFormatException;
 import edu.java.api.exceptions.LinkAlreadyTrackedException;
 import edu.java.api.exceptions.LinkNotFoundException;
-import edu.java.api.exceptions.UnsupportedUrlHostException;
+import edu.java.api.exceptions.UnsupportedUrlException;
 import edu.java.api.services.jdbc.JdbcChatService;
 import edu.java.api.services.jdbc.JdbcLinksService;
 import lombok.SneakyThrows;
@@ -177,7 +177,7 @@ public class ControllerAdviceTest {
     @DisplayName("Тест ControllerAdvice.invalidUrlFormat. Должен поймать выброшенное исключение при попытке добавить ссылку неправильного формата")
     public void addLinkToTracking_whenLinkHostIsNotSupported_shouldReturnCorrectErrorResponse() {
         AddLinkRequest request = new AddLinkRequest(new URI(""));
-        Mockito.doThrow(UnsupportedUrlHostException.class).when(jdbcLinksService).addLinkToTracking(1L, request);
+        Mockito.doThrow(UnsupportedUrlException.class).when(jdbcLinksService).addLinkToTracking(1L, request);
         var result = mockMvc.perform(
             MockMvcRequestBuilders
                 .post("/links")
@@ -195,7 +195,7 @@ public class ControllerAdviceTest {
             errorResponse = objectMapper.readValue(result.getResponse().getContentAsString(), ApiErrorResponse.class);
 
         assertThat(errorResponse.code()).isEqualTo("406");
-        assertThat(errorResponse.exceptionName()).isEqualTo(UnsupportedUrlHostException.class.getName());
+        assertThat(errorResponse.exceptionName()).isEqualTo(UnsupportedUrlException.class.getName());
     }
 
 }

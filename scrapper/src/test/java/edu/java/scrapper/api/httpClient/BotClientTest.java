@@ -31,11 +31,13 @@ public class BotClientTest {
         );
         server.start();
         BotClient client = new BotClient(server.baseUrl());
-        GenericResponse<Void> actual = client.updateLinks(new LinkUpdate(
-            1L,
-            new URI(""),
-            "",
-            List.of()
+        GenericResponse<Void> actual = client.notifyChats(
+            List.of(new LinkUpdate(
+                1L,
+                new URI(""),
+                "",
+                List.of()
+            )
         ));
 
         assertThat(actual.errorResponse()).isNull();
@@ -67,11 +69,13 @@ public class BotClientTest {
         );
         server.start();
         BotClient client = new BotClient(server.baseUrl());
-        GenericResponse<Void> actual = client.updateLinks(new LinkUpdate(
-            1L,
-            new URI(""),
-            "",
-            List.of()
+        GenericResponse<Void> actual = client.notifyChats(List.of(
+            new LinkUpdate(
+                1L,
+                new URI(""),
+                "",
+                List.of()
+            )
         ));
         GenericResponse<Void> expected = new GenericResponse<>(null, new ApiErrorResponse(
             "string",

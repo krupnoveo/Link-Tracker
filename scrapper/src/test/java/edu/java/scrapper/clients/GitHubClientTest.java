@@ -2,11 +2,16 @@ package edu.java.scrapper.clients;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import edu.java.clients.GitHubClient;
+import edu.java.configuration.ApplicationConfig;
 import edu.java.models.LinkData;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.reactive.function.client.WebClient;
 import java.net.URI;
 import java.net.URL;
 import java.time.OffsetDateTime;
@@ -46,7 +51,7 @@ public class GitHubClientTest {
     @Test
     @SneakyThrows
     public void isSupported_shouldReturnTrue_whenLinkIsValid() {
-        GitHubClient gitHubClient = new GitHubClient();
+        GitHubClient gitHubClient = new GitHubClient(server.baseUrl());
         URL url = new URI("https://github.com/krupnoveo/Link-Tracker").toURL();
 
         assertThat(gitHubClient.isUrlSupported(url)).isTrue();
@@ -55,7 +60,8 @@ public class GitHubClientTest {
     @Test
     @SneakyThrows
     public void isSupported_shouldReturnFalse_whenLinkIsInvalid() {
-        GitHubClient gitHubClient = new GitHubClient();
+        ApplicationConfig config = Mockito.mock(ApplicationConfig.class);
+        GitHubClient gitHubClient = new GitHubClient(server.baseUrl(), config);
         URL url1 = new URI("https://github.com/krupnoveo").toURL();
         URL url2 = new URI("https://gitlab.com/krupnoveo/Link-Tracker").toURL();
         URL url3 = new URI("http://gitlab.com/krupnoveo/Link-Tracker").toURL();
