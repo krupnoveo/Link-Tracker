@@ -40,10 +40,10 @@ public class StackOverflowClient extends BaseClient {
     }
 
     private record StackOverflowResponse(
-        @JsonProperty("items") StackOverflowEntity[] entities
+        @JsonProperty("items") StackOverflowItem[] entities
     ) {}
 
-    private record StackOverflowEntity(
+    private record StackOverflowItem(
         @JsonProperty("last_activity_date") OffsetDateTime lastUpdated
     ) {}
 }
