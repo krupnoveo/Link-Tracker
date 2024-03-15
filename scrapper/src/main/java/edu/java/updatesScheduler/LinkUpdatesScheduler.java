@@ -30,7 +30,7 @@ public class LinkUpdatesScheduler {
         log.info("updating");
         List<LinkDatabaseInformation> links = service
             .getAllLinksWhichWereNotCheckedForNminutes(
-                OffsetDateTime.now().minusMinutes(CHECKED_TIME_IN_MINUTES_CRITERIA)
+                CHECKED_TIME_IN_MINUTES_CRITERIA
             );
         List<LinkUpdate> updates = new ArrayList<>();
         for (LinkDatabaseInformation link : links) {

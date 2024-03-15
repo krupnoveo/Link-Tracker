@@ -19,8 +19,10 @@ public class DefaultLinkUpdatesSchedulerService implements LinkUpdatesSchedulerS
     private final ClientsHolder clientsHolder;
 
     @Override
-    public List<LinkDatabaseInformation> getAllLinksWhichWereNotCheckedForNminutes(OffsetDateTime criteria) {
-        return linksRepository.getAllLinksWhichWereNotCheckedBeforeDateTimeCriteria(criteria);
+    public List<LinkDatabaseInformation> getAllLinksWhichWereNotCheckedForNminutes(int minutes) {
+        return linksRepository.getAllLinksWhichWereNotCheckedBeforeDateTimeCriteria(
+            OffsetDateTime.now().minusMinutes(minutes)
+        );
     }
 
     @Override

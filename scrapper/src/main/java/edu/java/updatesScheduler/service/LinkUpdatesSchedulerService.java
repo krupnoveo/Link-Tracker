@@ -7,7 +7,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 public interface LinkUpdatesSchedulerService {
-    List<LinkDatabaseInformation> getAllLinksWhichWereNotCheckedForNminutes(OffsetDateTime criteria);
+    List<LinkDatabaseInformation> getAllLinksWhichWereNotCheckedForNminutes(int minutes);
 
     List<Chat> getChatsForLink(long urlId);
 
