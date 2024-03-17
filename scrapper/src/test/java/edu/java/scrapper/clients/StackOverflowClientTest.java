@@ -12,6 +12,8 @@ import java.net.URL;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.util.List;
+import java.util.Properties;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
@@ -55,7 +57,9 @@ public class StackOverflowClientTest {
     @Test
     @SneakyThrows
     public void isSupported_shouldReturnTrue_whenLinkIsValid() {
-        StackOverflowClient stackOverflowClient = new StackOverflowClient(server.baseUrl());
+        Properties properties = new Properties();
+        properties.load(getClass().getResourceAsStream("/messages.properties"));
+        StackOverflowClient stackOverflowClient = new StackOverflowClient(server.baseUrl(), properties);
         URL url = new URI("https://stackoverflow.com/questions/123/help").toURL();
 
         assertThat(stackOverflowClient.isUrlSupported(url)).isTrue();
@@ -64,7 +68,8 @@ public class StackOverflowClientTest {
     @Test
     @SneakyThrows
     public void isSupported_shouldReturnFalse_whenLinkIsInvalid() {
-        StackOverflowClient stackOverflowClient = new StackOverflowClient(server.baseUrl());
+        Properties properties = new Properties();
+        StackOverflowClient stackOverflowClient = new StackOverflowClient(server.baseUrl(), properties);
         URL url1 = new URI("https://stackoverflow.com/123").toURL();
         URL url2 = new URI("https://github.com/123/help").toURL();
         URL url3 = new URI("http://stackoverflow/123/help").toURL();
@@ -78,24 +83,26 @@ public class StackOverflowClientTest {
     @Test
     @SneakyThrows
     public void checkURL_shouldReturnCorrectAnswer_whenServerResponse200() {
-        StackOverflowClient stackOverflowClient = new StackOverflowClient(server.baseUrl());
+        Properties properties = new Properties();
+        StackOverflowClient stackOverflowClient = new StackOverflowClient(server.baseUrl(), properties);
         URL url = new URI("https://stackoverflow.com/questions/123/help").toURL();
-        LinkData data = stackOverflowClient.checkURL(url);
+        List<LinkData> data = stackOverflowClient.checkURL(url, OffsetDateTime.MIN);
         OffsetDateTime date = OffsetDateTime.ofInstant(Instant.ofEpochSecond(1333087111), ZoneId.systemDefault());
 
-        assertThat(url).isEqualTo(data.url());
-        assertThat(date).isEqualTo(data.lastUpdated());
+        assertThat(url).isEqualTo(data.get(0).url());
+        assertThat(date).isEqualTo(data.get(0).lastUpdated());
     }
 
     @Test
     @SneakyThrows
     public void checkURL_shouldReturnCorrectAnswer_whenServerResponse404() {
-        StackOverflowClient stackOverflowClient = new StackOverflowClient(server.baseUrl());
+        Properties properties = new Properties();
+        StackOverflowClient stackOverflowClient = new StackOverflowClient(server.baseUrl(), properties);
         URL url = new URI("https://stackoverflow.com/0/find").toURL();
-        LinkData data = stackOverflowClient.checkURL(url);
+        List<LinkData> data = stackOverflowClient.checkURL(url, OffsetDateTime.MIN);
 
-        assertThat(data.url()).isNull();
-        assertThat(data.lastUpdated()).isNull();
+        assertThat(data.get(0).url()).isNull();
+        assertThat(data.get(0).lastUpdated()).isNull();
     }
 
     @AfterAll

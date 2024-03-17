@@ -15,7 +15,11 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest
+@SpringBootTest(properties = {
+    "clients.github.token=1",
+    "clients.stackoverflow.token=1",
+    "clients.stackoverflow.key=1"
+})
 public class JdbcChatsRepositoryTest extends IntegrationEnvironment {
     @Autowired
     private JdbcChatsRepository chatRepository;

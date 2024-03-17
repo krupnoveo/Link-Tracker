@@ -19,7 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest
+@SpringBootTest(properties = {
+    "clients.github.token=1",
+    "clients.stackoverflow.token=1",
+    "clients.stackoverflow.key=1"
+})
 public class JdbcLinksRepositoryTest extends IntegrationEnvironment {
     @Autowired
     private JdbcLinksRepository linksRepository;

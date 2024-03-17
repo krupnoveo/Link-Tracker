@@ -5,7 +5,7 @@ import edu.java.api.dto.request.RemoveLinkRequest;
 import edu.java.api.dto.response.LinkResponse;
 import edu.java.api.dto.response.ListLinksResponse;
 import edu.java.api.services.LinksService;
-import edu.java.clientsHolder.ClientsHolder;
+import edu.java.clients.holder.ClientsHolder;
 import edu.java.domain.ChatsToLinksRepository;
 import edu.java.domain.LinksRepository;
 import edu.java.models.LinkData;
@@ -33,7 +33,7 @@ public class JdbcLinksService implements LinksService {
     public LinkResponse addLinkToTracking(long chatId, AddLinkRequest addLinkRequest) {
         log.info("Adding link...");
         URI uri = addLinkRequest.link();
-        long linkId = linksRepository.add(uri, getOffsetDateTimeFromLink(uri), OffsetDateTime.now());
+        long linkId = linksRepository.add(uri, getLastUpdatedTimeFromLink(uri), OffsetDateTime.now());
         chatsToLinksRepository.add(chatId, linkId, uri);
         return new LinkResponse(linkId, uri);
     }
@@ -50,8 +50,8 @@ public class JdbcLinksService implements LinksService {
         return new LinkResponse(linkId, uri);
     }
 
-    private OffsetDateTime getOffsetDateTimeFromLink(URI uri) {
-        LinkData linkData = clientsHolder.checkURl(uri);
+    private OffsetDateTime getLastUpdatedTimeFromLink(URI uri) {
+        LinkData linkData = clientsHolder.checkURl(uri, null).get(0);
         if (linkData.url() != null && linkData.lastUpdated() != null) {
             return linkData.lastUpdated();
         }

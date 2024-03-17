@@ -1,4 +1,4 @@
-package edu.java.clientService;
+package edu.java.httpClientService;
 
 import edu.java.api.httpClient.BotClient;
 import edu.java.models.GenericResponse;
