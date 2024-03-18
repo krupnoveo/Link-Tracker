@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 @ComponentScan(basePackages = "edu.java.clients")
 public class ClientsHolder {
+
     private final List<BaseClient> clientList;
 
     @Autowired

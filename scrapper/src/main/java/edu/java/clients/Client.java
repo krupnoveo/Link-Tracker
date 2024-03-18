@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface Client {
 
+
     List<LinkData> checkURL(URL url, OffsetDateTime lastUpdated);
 
     boolean isUrlSupported(URL url);

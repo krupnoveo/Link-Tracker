@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.reactive.function.client.WebClient;
 
 public class GitHubClient extends BaseClient {
+
     private String type;
     private String ref;
     private String refType;

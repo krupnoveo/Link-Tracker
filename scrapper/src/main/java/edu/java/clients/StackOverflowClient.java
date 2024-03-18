@@ -10,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StackOverflowClient extends BaseClient {
+
     private String keyAndToken = "";
 
     public StackOverflowClient(String url, Properties properties, String key, String token) {
