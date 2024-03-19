@@ -35,7 +35,7 @@ public class GitHubClientDataHandler implements ClientDataHandler {
                 }
             }
         }
-        return null;
+        return properties.getProperty("github.event.default.updateMessage");
     }
 
     @Override

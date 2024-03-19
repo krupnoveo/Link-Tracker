@@ -63,14 +63,12 @@ public class LinkUpdatesScheduler {
                 && lastUpdated.isAfter(link.lastUpdated())
         ) {
             updateLinkInformationInDatabase(lastUpdated, link.urlId());
-            if (message != null) {
-                updates.add(new LinkUpdate(
-                    link.urlId(),
-                    link.url(),
-                    message.formatted(link.url()),
-                    chats.stream().map(Chat::chatId).toList()
-                ));
-            }
+            updates.add(new LinkUpdate(
+                link.urlId(),
+                link.url(),
+                message.formatted(link.url()),
+                chats.stream().map(Chat::chatId).toList()
+            ));
         } else {
             updateLinkInformationInDatabase(link.lastUpdated(), link.urlId());
         }
