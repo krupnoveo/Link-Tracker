@@ -1,10 +1,10 @@
-package edu.java.scrapper.api.services.jdbc;
+package edu.java.scrapper.api.services.jooq;
 
 import edu.java.api.dto.request.AddLinkRequest;
 import edu.java.api.dto.request.RemoveLinkRequest;
 import edu.java.api.dto.response.LinkResponse;
 import edu.java.api.dto.response.ListLinksResponse;
-import edu.java.api.services.jdbc.JdbcLinksService;
+import edu.java.api.services.jooq.JooqLinksService;
 import edu.java.clients.holder.ClientsHolder;
 import edu.java.domain.ChatsToLinksRepository;
 import edu.java.domain.LinksRepository;
@@ -21,8 +21,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static org.assertj.core.api.Assertions.assertThat;
+
 @ExtendWith(MockitoExtension.class)
-public class JdbcLinksServiceTest {
+public class JooqLinksServiceTest {
     @Mock
     private LinksRepository linksRepository;
     @Mock
@@ -30,7 +31,7 @@ public class JdbcLinksServiceTest {
     @Mock
     private ClientsHolder clientsHolder;
     @InjectMocks
-    private JdbcLinksService service;
+    private JooqLinksService service;
 
     @Test
     @SneakyThrows
@@ -68,7 +69,6 @@ public class JdbcLinksServiceTest {
             LinkResponse expected = new LinkResponse(1L, uri);
             assertThat(actual).isEqualTo(expected);
         }
-
     }
 
     @Test

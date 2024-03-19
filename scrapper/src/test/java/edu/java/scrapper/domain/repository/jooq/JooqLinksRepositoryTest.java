@@ -1,14 +1,10 @@
-package edu.java.scrapper.domain.repository;
+package edu.java.scrapper.domain.repository.jooq;
 
 import edu.java.api.dto.response.LinkResponse;
 import edu.java.api.exceptions.LinkNotFoundException;
-import edu.java.domain.repository.JdbcLinksRepository;
+import edu.java.domain.LinksRepository;
 import edu.java.models.LinkDatabaseInformation;
 import edu.java.scrapper.IntegrationEnvironment;
-import java.net.URI;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.List;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +12,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+import java.net.URI;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest(properties = {
     "clients.github.token=1",
     "clients.stackoverflow.token=1",
-    "clients.stackoverflow.key=1"
+    "clients.stackoverflow.key=1",
+    "database.access-via=jooq"
 })
-public class JdbcLinksRepositoryTest extends IntegrationEnvironment {
+public class JooqLinksRepositoryTest extends IntegrationEnvironment {
     @Autowired
-    private JdbcLinksRepository linksRepository;
+    private LinksRepository linksRepository;
     @Autowired
     private JdbcClient client;
 
@@ -35,7 +36,8 @@ public class JdbcLinksRepositoryTest extends IntegrationEnvironment {
     @Rollback
     @SneakyThrows
     public void add_whenLinkIsNotTrackedYet_shouldWorkCorrectly() {
-        long urlId = linksRepository.add(new URI(""), OffsetDateTime.MIN, OffsetDateTime.MIN);
+        OffsetDateTime time = OffsetDateTime.of(2024, 3, 18, 23, 31, 0, 0, ZoneOffset.UTC);
+        long urlId = linksRepository.add(new URI(""), time, time);
         assertThat(client.sql("SELECT id FROM link WHERE id=?").param(urlId).query(Long.class).list()).isNotEmpty();
     }
 
@@ -166,10 +168,12 @@ public class JdbcLinksRepositoryTest extends IntegrationEnvironment {
     @Rollback
     @SneakyThrows
     public void getAllLinksWhichWereNotCheckedBeforeDateTimeCriteria_shouldReturnCorrectAnswer() {
+        OffsetDateTime time2 = OffsetDateTime.of(2024, 2, 14, 21, 23, 0, 0, ZoneOffset.UTC);
+        OffsetDateTime time1 = OffsetDateTime.of(2024, 3, 14, 21, 23, 0, 0, ZoneOffset.UTC);
         long urlId1 = client.sql("INSERT INTO link(url, updated_at, checked_at) values(?,?,?) RETURNING id")
             .params(
                 List.of(
-                    new URI("1").toString(), OffsetDateTime.MIN, OffsetDateTime.MAX
+                    new URI("1").toString(), time1, time1
                 )
             )
             .query(Long.class)
@@ -177,7 +181,7 @@ public class JdbcLinksRepositoryTest extends IntegrationEnvironment {
         long urlId2 = client.sql("INSERT INTO link(url, updated_at, checked_at) values(?,?,?) RETURNING id")
             .params(
                 List.of(
-                    new URI("2").toString(), OffsetDateTime.MIN, OffsetDateTime.MIN
+                    new URI("2").toString(), time1, time2
                 )
             )
             .query(Long.class)
@@ -185,9 +189,9 @@ public class JdbcLinksRepositoryTest extends IntegrationEnvironment {
         OffsetDateTime criteria = OffsetDateTime.of(2024, 3, 14, 21, 23, 0, 0, ZoneOffset.UTC);
         List<LinkDatabaseInformation> actual = linksRepository.getAllLinksWhichWereNotCheckedBeforeDateTimeCriteria(criteria);
         List<LinkDatabaseInformation> expected = List.of(
-            new LinkDatabaseInformation(urlId2, new URI("2"), OffsetDateTime.MIN)
+            new LinkDatabaseInformation(urlId2, new URI("2"), time1.withOffsetSameInstant(actual.getFirst().lastUpdated().getOffset()))
         );
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);
     }
 
     @Test

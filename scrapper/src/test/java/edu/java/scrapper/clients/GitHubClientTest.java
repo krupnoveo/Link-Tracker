@@ -82,12 +82,26 @@ public class GitHubClientTest {
 
     @Test
     @SneakyThrows
-    public void checkURL_shouldReturnCorrectAnswer_whenServerResponse200() {
+    public void checkURL_shouldReturnCorrectAnswer_whenServerResponse200_and_lastUpdatedIsNotNull() {
         Properties properties = new Properties();
         properties.load(getClass().getResourceAsStream("/messages.properties"));
         GitHubClient gitHubClient = new GitHubClient(server.baseUrl(), properties);
         URL url = new URI("https://github.com/krupnoveo/Link-Tracker").toURL();
         List<LinkData> data = gitHubClient.checkURL(url, OffsetDateTime.MIN);
+        OffsetDateTime date = OffsetDateTime.parse("2024-03-17T18:15:35Z");
+
+        assertThat(url).isEqualTo(data.get(0).url());
+        assertThat(date).isEqualTo(data.get(0).lastUpdated());
+    }
+
+    @Test
+    @SneakyThrows
+    public void checkURL_shouldReturnCorrectAnswer_whenServerResponse200_and_lastUpdatedIsNull() {
+        Properties properties = new Properties();
+        properties.load(getClass().getResourceAsStream("/messages.properties"));
+        GitHubClient gitHubClient = new GitHubClient(server.baseUrl(), properties);
+        URL url = new URI("https://github.com/krupnoveo/Link-Tracker").toURL();
+        List<LinkData> data = gitHubClient.checkURL(url, null);
         OffsetDateTime date = OffsetDateTime.parse("2024-03-17T18:15:35Z");
 
         assertThat(url).isEqualTo(data.get(0).url());

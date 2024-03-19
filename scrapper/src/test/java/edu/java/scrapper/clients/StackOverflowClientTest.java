@@ -59,7 +59,7 @@ public class StackOverflowClientTest {
     public void isSupported_shouldReturnTrue_whenLinkIsValid() {
         Properties properties = new Properties();
         properties.load(getClass().getResourceAsStream("/messages.properties"));
-        StackOverflowClient stackOverflowClient = new StackOverflowClient(server.baseUrl(), properties);
+        StackOverflowClient stackOverflowClient = new StackOverflowClient(server.baseUrl(), properties, "", "");
         URL url = new URI("https://stackoverflow.com/questions/123/help").toURL();
 
         assertThat(stackOverflowClient.isUrlSupported(url)).isTrue();

@@ -1,8 +1,9 @@
-package edu.java.scrapper.domain.repository;
+package edu.java.scrapper.domain.repository.jdbc;
 
 import edu.java.api.exceptions.ChatAlreadyRegisteredException;
 import edu.java.api.exceptions.ChatDoesNotExistException;
-import edu.java.domain.repository.JdbcChatsRepository;
+import edu.java.domain.ChatsRepository;
+import edu.java.domain.repository.jdbc.JdbcChatsRepository;
 import edu.java.models.Chat;
 import edu.java.scrapper.IntegrationEnvironment;
 import org.junit.jupiter.api.Test;
@@ -18,11 +19,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest(properties = {
     "clients.github.token=1",
     "clients.stackoverflow.token=1",
-    "clients.stackoverflow.key=1"
+    "clients.stackoverflow.key=1",
+    "database.access-via=jdbc"
 })
 public class JdbcChatsRepositoryTest extends IntegrationEnvironment {
     @Autowired
-    private JdbcChatsRepository chatRepository;
+    private ChatsRepository chatRepository;
     @Autowired
     private JdbcClient client;
 

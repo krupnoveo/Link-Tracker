@@ -1,14 +1,12 @@
-package edu.java.scrapper.domain.repository;
+package edu.java.scrapper.domain.repository.jooq;
 
 import edu.java.api.dto.response.LinkResponse;
 import edu.java.api.exceptions.ChatDoesNotExistException;
 import edu.java.api.exceptions.LinkAlreadyTrackedException;
 import edu.java.api.exceptions.LinkNotFoundException;
-import edu.java.domain.repository.JdbcChatsToLinksRepository;
+import edu.java.domain.ChatsToLinksRepository;
 import edu.java.models.Chat;
 import edu.java.scrapper.IntegrationEnvironment;
-import java.net.URI;
-import java.util.List;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +14,20 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+import java.net.URI;
+import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest(properties = {
     "clients.github.token=1",
     "clients.stackoverflow.token=1",
-    "clients.stackoverflow.key=1"
+    "clients.stackoverflow.key=1",
+    "database.access-via=jooq"
 })
-public class JdbcChatsToLinksRepositoryTest extends IntegrationEnvironment {
+public class JooqChatsToLinksRepositoryTest extends IntegrationEnvironment {
     @Autowired
-    private JdbcChatsToLinksRepository chatsToLinksRepository;
+    private ChatsToLinksRepository chatsToLinksRepository;
     @Autowired
     private JdbcClient client;
 
