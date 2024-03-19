@@ -16,7 +16,7 @@ public class StackOverflowClientDataHandler implements ClientDataHandler {
     }
 
     @Override
-    public String getMessageByDescriptionAndHost(Map<String, String> description) {
+    public String getMessageByDescription(Map<String, String> description) {
         return properties.getProperty("stackoverflow.updateMessage");
     }
 

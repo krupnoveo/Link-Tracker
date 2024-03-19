@@ -23,7 +23,7 @@ public class GitHubClientDataHandler implements ClientDataHandler {
 
     @SuppressWarnings("checkstyle:MagicNumber")
     @Override
-    public String getMessageByDescriptionAndHost(Map<String, String> description) {
+    public String getMessageByDescription(Map<String, String> description) {
         if (description != null) {
             String type = description.get(properties.getProperty(PREFIX + "type.name"));
             String ref = description.get(properties.getProperty(PREFIX + "ref.name"));

@@ -23,7 +23,7 @@ public class ClientDataHandlersHolder {
     public String getMessageByDescriptionAndHost(String host, Map<String, String> description) {
         for (ClientDataHandler dataHandler : dataHandlerList) {
             if (dataHandler.isHostSupported(host)) {
-                return dataHandler.getMessageByDescriptionAndHost(description);
+                return dataHandler.getMessageByDescription(description);
             }
         }
         return properties.getProperty("default.updateMessage");
