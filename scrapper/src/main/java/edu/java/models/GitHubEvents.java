@@ -27,7 +27,7 @@ public abstract class GitHubEvents {
 
     @Component
     public static class PushEvent extends GitHubEvents {
-        PushEvent(Properties properties) {
+        public PushEvent(Properties properties) {
             super(properties);
             this.eventName = properties.getProperty("github.event.push.name");
         }
@@ -42,7 +42,7 @@ public abstract class GitHubEvents {
 
     @Component
     public static class CreateEvent extends GitHubEvents {
-        CreateEvent(Properties properties) {
+        public CreateEvent(Properties properties) {
             super(properties);
             this.eventName = properties.getProperty("github.event.create.name");
         }
@@ -59,7 +59,7 @@ public abstract class GitHubEvents {
 
     @Component
     public static class IssuesEvent extends GitHubEvents {
-        IssuesEvent(Properties properties) {
+        public IssuesEvent(Properties properties) {
             super(properties);
             this.eventName = properties.getProperty("github.event.issues.name");
         }
