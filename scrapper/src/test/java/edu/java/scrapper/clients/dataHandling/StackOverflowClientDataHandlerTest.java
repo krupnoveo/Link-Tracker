@@ -14,7 +14,7 @@ public class StackOverflowClientDataHandlerTest {
         properties.load(getClass().getResourceAsStream("/messages.properties"));
         StackOverflowClientDataHandler handler = new StackOverflowClientDataHandler(properties);
 
-        assertThat(handler.getMessageByDescription(null)).isEqualTo(properties.getProperty("stackoverflow.updateMessage"));
+        assertThat(handler.getMessageByDescription(null)).isEqualTo(properties.getProperty("stackoverflow.event.default.updateMessage"));
     }
 
     @Test

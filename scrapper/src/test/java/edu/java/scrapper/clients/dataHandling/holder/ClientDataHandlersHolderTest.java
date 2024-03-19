@@ -27,7 +27,7 @@ public class ClientDataHandlersHolderTest {
         ClientDataHandlersHolder holder = new ClientDataHandlersHolder(handlerList, properties);
         String host = "stackoverflow.com";
         String actual = holder.getMessageByDescriptionAndHost(host, null);
-        String expected = properties.getProperty("stackoverflow.updateMessage");
+        String expected = properties.getProperty("stackoverflow.event.default.updateMessage");
         assertThat(actual).isEqualTo(expected);
     }
 
