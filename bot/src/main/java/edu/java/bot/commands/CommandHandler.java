@@ -6,17 +6,19 @@ import java.util.Properties;
 
 public abstract class CommandHandler {
     protected final Properties properties;
-    protected CommandHandler nextHandler = null;
 
     public CommandHandler(Properties properties) {
         this.properties = properties;
     }
 
-    public void setNextHandler(CommandHandler nextHandler) {
-        this.nextHandler = nextHandler;
+    public boolean isSupportsUpdate(Update update) {
+        return
+            update.message() != null
+                && update.message().text() != null;
     }
 
     public abstract SendMessage handleCommand(Update update);
+
 
     public abstract String commandName();
 

@@ -1,10 +1,10 @@
 package edu.java.bot;
 
 import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.request.SetMyCommands;
 import edu.java.bot.commandsHolder.CommandsHolder;
-import edu.java.bot.updatesListener.MessageUpdatesListener;
 import jakarta.annotation.PostConstruct;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +14,13 @@ import org.springframework.stereotype.Component;
 public class Bot {
     private final CommandsHolder commandsHolder;
     private final TelegramBot bot;
+    private final UpdatesListener listener;
 
     @Autowired
-    public Bot(CommandsHolder commandsHolder, TelegramBot bot) {
+    public Bot(CommandsHolder commandsHolder, TelegramBot bot, UpdatesListener listener) {
         this.commandsHolder = commandsHolder;
         this.bot = bot;
+        this.listener = listener;
     }
 
     @PostConstruct
@@ -41,7 +43,6 @@ public class Bot {
     }
 
     private void setUpUpdatesListener() {
-        MessageUpdatesListener listener = new MessageUpdatesListener(bot, commandsHolder);
         bot.setUpdatesListener(listener);
     }
 }

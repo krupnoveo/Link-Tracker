@@ -1,3 +1,5 @@
 package edu.java.bot.models;
 
-public record RemoveLinkFromDatabaseResponse(boolean status, String responseFromDatabase, Link link) {}
+import java.net.URI;
+
+public record RemoveLinkFromDatabaseResponse(long id, URI url) {}
