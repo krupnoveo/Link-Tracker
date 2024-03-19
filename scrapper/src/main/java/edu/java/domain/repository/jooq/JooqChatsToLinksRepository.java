@@ -19,6 +19,7 @@ import static edu.java.domain.jooq.tables.Link.LINK;
 
 @Repository
 @RequiredArgsConstructor
+@ConditionalOnProperty(name = "database.access-via", havingValue = "jooq")
 public class JooqChatsToLinksRepository implements ChatsToLinksRepository {
     private final DSLContext context;
 

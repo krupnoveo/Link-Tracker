@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 @Log4j2
 @Service
+@ConditionalOnProperty(name = "database.access-via", havingValue = "jooq")
 @RequiredArgsConstructor
 public class JooqLinksService implements LinksService {
     private final LinksRepository linksRepository;

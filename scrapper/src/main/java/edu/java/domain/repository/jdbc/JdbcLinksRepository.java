@@ -1,4 +1,4 @@
-package edu.java.domain.repository;
+package edu.java.domain.repository.jdbc;
 
 import edu.java.api.dto.response.LinkResponse;
 import edu.java.api.exceptions.LinkNotFoundException;
@@ -8,11 +8,13 @@ import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
+@ConditionalOnProperty(name = "database.access-via", havingValue = "jdbc")
 public class JdbcLinksRepository implements LinksRepository {
     private static final String SELECT_ID_BY_URL = "SELECT id FROM link WHERE url=?";
     private static final String SELECT_URL_BY_ID = "SELECT url FROM link WHERE id=?";
@@ -90,6 +92,9 @@ public class JdbcLinksRepository implements LinksRepository {
     @Override
     @Transactional
     public URI getUriById(long id) {
+        if (client.sql(SELECT_URL_BY_ID).param(id).query(URI.class).list().isEmpty()) {
+            throw new LinkNotFoundException();
+        }
         return client.sql(SELECT_URL_BY_ID)
             .param(id)
             .query(URI.class)

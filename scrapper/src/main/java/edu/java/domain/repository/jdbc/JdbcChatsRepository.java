@@ -1,4 +1,4 @@
-package edu.java.domain.repository;
+package edu.java.domain.repository.jdbc;
 
 import edu.java.api.exceptions.ChatAlreadyRegisteredException;
 import edu.java.api.exceptions.ChatDoesNotExistException;
@@ -6,11 +6,13 @@ import edu.java.domain.ChatsRepository;
 import edu.java.models.Chat;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
+@ConditionalOnProperty(name = "database.access-via", havingValue = "jdbc")
 public class JdbcChatsRepository implements ChatsRepository {
     private static final String SELECT_BY_ID = "SELECT * FROM chat WHERE chat_id=?";
     private static final String SELECT_BY_ALL = "SELECT * FROM chat";

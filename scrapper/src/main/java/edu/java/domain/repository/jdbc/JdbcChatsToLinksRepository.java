@@ -1,4 +1,4 @@
-package edu.java.domain.repository;
+package edu.java.domain.repository.jdbc;
 
 import edu.java.api.dto.response.LinkResponse;
 import edu.java.api.exceptions.ChatDoesNotExistException;
@@ -10,11 +10,13 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
+@ConditionalOnProperty(name = "database.access-via", havingValue = "jdbc")
 public class JdbcChatsToLinksRepository implements ChatsToLinksRepository {
     private static final String SELECT_CHAT_ID_BY_CHAT_ID_AND_LINK_ID =
         "SELECT chat_id FROM chat_to_link WHERE chat_id=? AND link_id=?";

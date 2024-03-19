@@ -8,10 +8,12 @@ import edu.java.domain.LinksRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 @Log4j2
 @Service
+@ConditionalOnProperty(name = "database.access-via", havingValue = "jdbc")
 @RequiredArgsConstructor
 public class JdbcChatService implements ChatService {
     private final ChatsRepository chatRepository;

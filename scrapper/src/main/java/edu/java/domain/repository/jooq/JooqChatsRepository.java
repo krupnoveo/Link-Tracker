@@ -14,6 +14,7 @@ import static edu.java.domain.jooq.tables.Chat.CHAT;
 
 @Repository
 @RequiredArgsConstructor
+@ConditionalOnProperty(name = "database.access-via", havingValue = "jooq")
 public class JooqChatsRepository implements ChatsRepository {
     private final DSLContext context;
 

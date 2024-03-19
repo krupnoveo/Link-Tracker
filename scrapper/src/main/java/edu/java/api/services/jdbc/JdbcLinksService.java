@@ -14,10 +14,12 @@ import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 @Log4j2
 @Service
+@ConditionalOnProperty(name = "database.access-via", havingValue = "jdbc")
 @RequiredArgsConstructor
 public class JdbcLinksService implements LinksService {
     private final LinksRepository linksRepository;
@@ -25,11 +27,13 @@ public class JdbcLinksService implements LinksService {
     private final ClientsHolder clientsHolder;
 
     @SneakyThrows
+    @Override
     public ListLinksResponse getTrackedLinks(long chatId) {
         log.info("Getting tracked links...");
         return new ListLinksResponse(chatsToLinksRepository.findAllByChatId(chatId));
     }
 
+    @Override
     public LinkResponse addLinkToTracking(long chatId, AddLinkRequest addLinkRequest) {
         log.info("Adding link...");
         URI uri = addLinkRequest.link();
@@ -39,6 +43,7 @@ public class JdbcLinksService implements LinksService {
     }
 
     @SneakyThrows
+    @Override
     public LinkResponse removeLinkFromTracking(long chatId, RemoveLinkRequest removeLinkRequest) {
         log.info("Deleting link...");
         long linkId = removeLinkRequest.linkId();

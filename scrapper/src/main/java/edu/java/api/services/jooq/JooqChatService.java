@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Log4j2
 @Service
+@ConditionalOnProperty(name = "database.access-via", havingValue = "jooq")
 @RequiredArgsConstructor
 public class JooqChatService implements ChatService {
     private final ChatsRepository chatRepository;
