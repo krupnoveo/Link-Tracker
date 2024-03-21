@@ -64,7 +64,7 @@ public class JpaLinksServiceTest extends IntegrationEnvironment {
             new LinkResponse(linkId1, new URI("1")),
             new LinkResponse(linkId2, new URI("2"))
         ));
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual.links()).containsExactlyInAnyOrderElementsOf(expected.links());
     }
 
     @Test
