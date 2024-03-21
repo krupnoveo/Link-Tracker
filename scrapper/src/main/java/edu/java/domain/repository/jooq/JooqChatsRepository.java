@@ -7,14 +7,10 @@ import edu.java.models.Chat;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import static edu.java.domain.jooq.tables.Chat.CHAT;
 
-@Repository
 @RequiredArgsConstructor
-@ConditionalOnProperty(name = "database.access-via", havingValue = "jooq")
 public class JooqChatsRepository implements ChatsRepository {
     private final DSLContext context;
 
