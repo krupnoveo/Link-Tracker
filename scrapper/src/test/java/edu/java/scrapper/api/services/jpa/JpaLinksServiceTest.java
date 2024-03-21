@@ -199,7 +199,7 @@ public class JpaLinksServiceTest extends IntegrationEnvironment {
     @Rollback
     @SneakyThrows
     public void getAllLinksWhichWereNotCheckedForNminutes() {
-        OffsetDateTime time = OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.UTC);
+        OffsetDateTime time = OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.UTC).withSecond(0).withNano(0);
         URI uri = new URI("https://github.com");
         long linkId1 = client.sql("insert into link(url, updated_at, checked_at) values(?, ?, ?) returning id").params(List.of(
             uri + "1", time.minusHours(1), time.minusMinutes(40)
