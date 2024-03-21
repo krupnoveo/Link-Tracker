@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @EnableScheduling
 @RequiredArgsConstructor
 public class LinkUpdatesScheduler {
-    private static final int CHECKED_TIME_IN_MINUTES_CRITERIA = 15;
+    private static final int CHECKED_TIME_IN_MINUTES_CRITERIA = 0;
     private final LinkUpdatesSchedulerService service;
     private final ScrapperService scrapperService;
 
