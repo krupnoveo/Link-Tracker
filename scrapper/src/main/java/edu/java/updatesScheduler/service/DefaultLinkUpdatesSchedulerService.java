@@ -1,9 +1,8 @@
 package edu.java.updatesScheduler.service;
 
+import edu.java.api.services.LinksService;
 import edu.java.clients.dataHandling.holder.ClientDataHandlersHolder;
 import edu.java.clients.holder.ClientsHolder;
-import edu.java.domain.ChatsToLinksRepository;
-import edu.java.domain.LinksRepository;
 import edu.java.models.Chat;
 import edu.java.models.LinkData;
 import edu.java.models.LinkDatabaseInformation;
@@ -17,21 +16,18 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class DefaultLinkUpdatesSchedulerService implements LinkUpdatesSchedulerService {
-    private final LinksRepository linksRepository;
-    private final ChatsToLinksRepository chatsToLinksRepository;
+    private final LinksService linksService;
     private final ClientsHolder clientsHolder;
     private final ClientDataHandlersHolder clientDataHandlersHolder;
 
     @Override
     public List<LinkDatabaseInformation> getAllLinksWhichWereNotCheckedForNminutes(int minutes) {
-        return linksRepository.getAllLinksWhichWereNotCheckedBeforeDateTimeCriteria(
-            OffsetDateTime.now().minusMinutes(minutes)
-        );
+        return linksService.getAllLinksWhichWereNotCheckedForNminutes(minutes);
     }
 
     @Override
     public List<Chat> getChatsForLink(long urlId) {
-        return chatsToLinksRepository.getChatsForLink(urlId);
+        return linksService.getChatsForLink(urlId);
     }
 
     @Override
@@ -41,7 +37,7 @@ public class DefaultLinkUpdatesSchedulerService implements LinkUpdatesSchedulerS
 
     @Override
     public void updateLinkInformationInDatabase(OffsetDateTime lastUpdated, OffsetDateTime lastChecked, long urlId) {
-        linksRepository.updateLinkInformationInDatabase(lastUpdated, lastChecked, urlId);
+        linksService.updateLinkInformationInDatabase(lastUpdated, lastChecked, urlId);
     }
 
     @Override
