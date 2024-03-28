@@ -14,6 +14,12 @@ clients:
     key: ${STACKOVERFLOW_KEY}
     token: ${STACKOVERFLOW_TOKEN}
 
+rate-limiting:
+  capacity: 1
+  tokens-per-period: 1
+  gen-period: 5s
+  excluded-ips: ~
+
 spring:
   config:
     import: optional:file:.env[.properties]

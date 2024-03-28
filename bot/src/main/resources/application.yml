@@ -9,6 +9,13 @@ spring:
   jackson:
     time-zone: UTC
 
+
+rate-limiting:
+  capacity: 100
+  tokens-per-period: 100
+  gen-period: 1s
+  excluded-ips: 127.0.0.1
+
 server:
   port: 8090
 

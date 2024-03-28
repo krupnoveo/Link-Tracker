@@ -1,5 +1,6 @@
 package edu.java.api.controllers;
 
+import edu.java.api.controllers.rateLimit.RateLimit;
 import edu.java.api.dto.request.AddLinkRequest;
 import edu.java.api.dto.request.RemoveLinkRequest;
 import edu.java.api.dto.response.LinkResponse;
@@ -7,6 +8,7 @@ import edu.java.api.dto.response.ListLinksResponse;
 import edu.java.api.services.LinksService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,24 +28,32 @@ public class LinksController {
 
     @GetMapping
     @Operation(summary = "Получить все отслеживаемые ссылки")
-    public ListLinksResponse getTrackedLinks(@RequestHeader(REQUEST_HEADER_NAME) long chatId) {
+    @RateLimit
+    public ListLinksResponse getTrackedLinks(
+        @RequestHeader(REQUEST_HEADER_NAME) long chatId,
+        HttpServletRequest request
+    ) {
         return service.getTrackedLinks(chatId);
     }
 
     @PostMapping
     @Operation(summary = "Добавить отслеживание ссылки")
+    @RateLimit
     public LinkResponse addLinkToTracking(
         @RequestHeader(REQUEST_HEADER_NAME) long chatId,
-        @RequestBody AddLinkRequest addLinkRequest
+        @RequestBody AddLinkRequest addLinkRequest,
+        HttpServletRequest request
         ) {
         return service.addLinkToTracking(chatId, addLinkRequest);
     }
 
     @DeleteMapping
     @Operation(summary = "Убрать отслеживание ссылки")
+    @RateLimit
     public LinkResponse removeLinkFromTracking(
         @RequestHeader(REQUEST_HEADER_NAME) long chatId,
-        @RequestBody RemoveLinkRequest removeLinkRequest
+        @RequestBody RemoveLinkRequest removeLinkRequest,
+        HttpServletRequest request
     ) {
         return service.removeLinkFromTracking(chatId, removeLinkRequest);
     }

@@ -7,6 +7,7 @@ import edu.java.api.exceptions.IncorrectRequestParametersException;
 import edu.java.api.exceptions.InvalidUrlFormatException;
 import edu.java.api.exceptions.LinkAlreadyTrackedException;
 import edu.java.api.exceptions.LinkNotFoundException;
+import edu.java.api.exceptions.TooManyRequestsException;
 import edu.java.api.exceptions.UnsupportedUrlException;
 import java.util.Arrays;
 import org.springframework.http.HttpStatus;
@@ -77,7 +78,7 @@ public class ControllerAdvice {
         );
     }
 
-    @ExceptionHandler(InvalidUrlFormatException.class)
+    @ExceptionHandler({InvalidUrlFormatException.class, })
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     public ApiErrorResponse invalidUrlFormat(InvalidUrlFormatException e) {
         return new ApiErrorResponse(
@@ -95,6 +96,30 @@ public class ControllerAdvice {
         return new ApiErrorResponse(
             "Неподдерживаемый хост",
             String.valueOf(HttpStatus.NOT_ACCEPTABLE.value()),
+            e.getClass().getName(),
+            e.getMessage(),
+            Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toList()
+        );
+    }
+
+    @ExceptionHandler(TooManyRequestsException.class)
+    @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
+    public ApiErrorResponse tooManyRequests(TooManyRequestsException e) {
+        return new ApiErrorResponse(
+            "Превышен лимит запросов",
+            String.valueOf(HttpStatus.TOO_MANY_REQUESTS.value()),
+            e.getClass().getName(),
+            e.getMessage(),
+            Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toList()
+        );
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ApiErrorResponse internalServerError(Exception e) {
+        return new ApiErrorResponse(
+            "внутренняя ошибка сервера",
+            String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()),
             e.getClass().getName(),
             e.getMessage(),
             Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toList()
