@@ -3,6 +3,8 @@ package edu.java.configuration;
 import edu.java.api.httpClient.BotClient;
 import edu.java.clients.GitHubClient;
 import edu.java.clients.StackOverflowClient;
+import edu.java.configuration.RetryConfiguration.Client;
+import edu.java.util.RetryFactory;
 import java.util.Map;
 import java.util.Properties;
 import lombok.extern.log4j.Log4j2;
@@ -79,7 +81,7 @@ public class ClientConfiguration {
     }
 
     @Bean
-    public BotClient botClient() {
-        return new BotClient();
+    public BotClient botClient(RetryConfiguration retryConfiguration) {
+        return new BotClient(RetryFactory.createRule(retryConfiguration.clientConfigs(), Client.BOT));
     }
 }

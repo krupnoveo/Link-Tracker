@@ -33,7 +33,7 @@ public class ClientsHolder {
                 }
             }
             throw new UnsupportedUrlException(uri.toString());
-        } catch (MalformedURLException e) {
+        } catch (MalformedURLException | IllegalArgumentException e) {
             throw new InvalidUrlFormatException(uri.toString());
         }
     }

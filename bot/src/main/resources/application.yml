@@ -9,6 +9,15 @@ spring:
   jackson:
     time-zone: UTC
 
+retry:
+  client-configs:
+    - client: scrapper
+      mode: fixed
+      max-attempts: 10
+      min-delay: 1s
+      codes: 429
+
+
 
 rate-limiting:
   capacity: 100
