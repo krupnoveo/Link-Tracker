@@ -27,9 +27,7 @@ public class GitHubClient extends BaseClient {
         super(
             WebClient.builder()
                 .baseUrl(baseUrl)
-                .defaultHeaders(headers -> {
-                    headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + gitHubToken);
-                })
+                .defaultHeaders(headers -> headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + gitHubToken))
                 .filter(RetryFactory.createFilter(rule))
                 .build(),
             properties

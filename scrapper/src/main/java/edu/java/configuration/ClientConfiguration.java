@@ -30,9 +30,8 @@ public class ClientConfiguration {
         WebClient client = WebClient.builder()
             .baseUrl(baseUrl)
             .defaultStatusHandler(httpStatusCode -> true, clientResponse -> Mono.empty())
-            .defaultHeaders(httpHeaders -> {
-                httpHeaders.add(HttpHeaders.AUTHORIZATION, "Bearer " + gitHubToken);
-            })
+            .defaultHeaders(httpHeaders ->
+                httpHeaders.add(HttpHeaders.AUTHORIZATION, "Bearer " + gitHubToken))
             .build();
         Map response = client
             .get()
