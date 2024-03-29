@@ -44,7 +44,7 @@ rate-limiting:
   capacity: 1
   tokens-per-period: 1
   gen-period: 5s
-  excluded-ips: ~
+  excluded-ips: 127.0.0.1
 
 spring:
   config:
