@@ -1,4 +1,4 @@
-package edu.java.scrapper.api.httpClient;
+package edu.java.scrapper.api.client.http;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import edu.java.api.dto.response.ApiErrorResponse;

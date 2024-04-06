@@ -1,4 +1,4 @@
-package edu.java.bot.api.controllers;
+package edu.java.bot.api.endpoints.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.java.bot.api.dto.request.LinkUpdate;
