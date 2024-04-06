@@ -13,10 +13,10 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class KafkaConsumer {
+public class KafkaUpdatesListener {
     private final LinkUpdatesService service;
 
-    @KafkaListener(topics = "linkUpdate", groupId = "group1")
+    @KafkaListener(topics = "linkUpdate", groupId = "scrapper")
     @RetryableTopic(attempts = "1", dltStrategy = DltStrategy.FAIL_ON_ERROR, dltTopicSuffix = "_dlq")
     public void updateLinks(ListLinkUpdates linkUpdates) {
         service.notifyUsers(linkUpdates.linkUpdates());
