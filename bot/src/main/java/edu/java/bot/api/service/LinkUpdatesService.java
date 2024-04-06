@@ -25,5 +25,6 @@ public class LinkUpdatesService {
                 chatResponser.sendMessage(message);
             }
         }
+        throw new RuntimeException();
     }
 }

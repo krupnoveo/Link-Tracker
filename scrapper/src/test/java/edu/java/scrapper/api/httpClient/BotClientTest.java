@@ -2,7 +2,7 @@ package edu.java.scrapper.api.httpClient;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import edu.java.api.dto.response.ApiErrorResponse;
-import edu.java.api.httpClient.BotClient;
+import edu.java.api.client.http.BotClient;
 import edu.java.models.GenericResponse;
 import edu.java.models.LinkUpdate;
 import lombok.SneakyThrows;
@@ -31,7 +31,7 @@ public class BotClientTest {
         );
         server.start();
         BotClient client = new BotClient(server.baseUrl());
-        GenericResponse<Void> actual = client.notifyChats(
+        GenericResponse<Void> actual = client.sendNotification(
             List.of(new LinkUpdate(
                 1L,
                 new URI(""),
@@ -69,7 +69,7 @@ public class BotClientTest {
         );
         server.start();
         BotClient client = new BotClient(server.baseUrl());
-        GenericResponse<Void> actual = client.notifyChats(List.of(
+        GenericResponse<Void> actual = client.sendNotification(List.of(
             new LinkUpdate(
                 1L,
                 new URI(""),

@@ -1,6 +1,6 @@
 package edu.java.bot;
 
-import edu.java.bot.api.controllers.rateLimit.RateLimiterAspect;
+import edu.java.bot.api.endpoints.controllers.rateLimit.RateLimiterAspect;
 import edu.java.bot.configuration.ApplicationConfig;
 import edu.java.bot.configuration.RetryConfiguration;
 import org.springframework.boot.SpringApplication;

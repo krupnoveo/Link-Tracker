@@ -4,6 +4,10 @@ app:
     interval: 10s
     force-check-delay: 20s
   database-access-type: jpa
+  kafka:
+    topics:
+      link-update: linkUpdate
+  use-queue: true
 
 clients:
   github:
@@ -48,7 +52,7 @@ rate-limiting:
 
 spring:
   config:
-    import: optional:file:.env[.properties]
+    import: optional:file:.env[.properties], optional:file:src/main/resources/messages.properties
   application:
     name: scrapper
   liquibase:
@@ -61,6 +65,14 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
 
 server:
   port: 8080

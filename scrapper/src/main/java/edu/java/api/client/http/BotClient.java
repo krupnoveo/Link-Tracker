@@ -1,4 +1,4 @@
-package edu.java.api.httpClient;
+package edu.java.api.client.http;
 
 import edu.java.api.dto.response.ApiErrorResponse;
 import edu.java.models.GenericResponse;
@@ -36,7 +36,7 @@ public class BotClient {
         this.webClient = WebClient.create(baseUrl);
     }
 
-    public GenericResponse<Void> notifyChats(List<LinkUpdate> linkUpdates) {
+    public GenericResponse<Void> sendNotification(List<LinkUpdate> linkUpdates) {
         var clientResponse = webClient
             .post()
             .uri(PATH_FOR_UPDATE_LINKS_CONTROLLER)
