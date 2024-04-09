@@ -74,6 +74,22 @@ spring:
       properties:
         spring.json.add.type.headers: false
 
+
+management:
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: info, health, prometheus
+      path-mapping:
+        prometheus: metrics
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  server:
+    port: 8081
+
+
 server:
   port: 8080
 
