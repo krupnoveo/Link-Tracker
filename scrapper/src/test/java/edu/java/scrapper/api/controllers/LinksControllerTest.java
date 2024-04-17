@@ -7,6 +7,8 @@ import edu.java.api.dto.request.RemoveLinkRequest;
 import edu.java.api.dto.response.LinkResponse;
 import edu.java.api.dto.response.ListLinksResponse;
 import edu.java.api.services.LinksService;
+import java.net.URI;
+import java.util.List;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,8 +19,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import java.net.URI;
-import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @WebMvcTest(LinksController.class)

@@ -31,19 +31,23 @@ public class UpdateLinkControllerTest {
             MockMvcRequestBuilders
                 .post("/updates")
                 .content("""
-                    {
-                        "urlId": 1,
-                        "url": "https://ya.ru",
-                        "description": "some text",
-                        "chatIds": [
-                            0
-                        ]
-                    }
+                    [
+                        {
+                            "urlId": 1,
+                            "url": "https://ya.ru",
+                            "description": "some text",
+                            "chatIds": [
+                                0
+                            ]
+                        }
+                    ]
                     """)
                 .contentType("application/json")
         ).andExpect(MockMvcResultMatchers.status().isOk());
 
-        Mockito.verify(service).notifyUsers(new LinkUpdate(1, new URI("https://ya.ru"), "some text", List.of(0L)));
+        Mockito.verify(service).notifyUsers(List.of(
+            new LinkUpdate(1, new URI("https://ya.ru"), "some text", List.of(0L))
+        ));
     }
 
     @Test

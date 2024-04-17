@@ -4,6 +4,7 @@ import edu.java.bot.api.dto.request.LinkUpdate;
 import edu.java.bot.api.service.LinkUpdatesService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,7 @@ public class UpdateLinkController {
 
     @PostMapping
     @Operation(summary = "Отправить обновление")
-    public void updateLinks(@RequestBody @Valid LinkUpdate linkUpdate) {
-        service.notifyUsers(linkUpdate);
+    public void updateLinks(@RequestBody @Valid List<LinkUpdate> linkUpdates) {
+        service.notifyUsers(linkUpdates);
     }
 }

@@ -1,6 +1,6 @@
 package edu.java.clients;
 
-import edu.java.dto.LinkData;
+import edu.java.models.LinkData;
 import java.net.URL;
 
 public interface Client {

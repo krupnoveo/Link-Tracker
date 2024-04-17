@@ -12,9 +12,9 @@ import edu.java.api.exceptions.IncorrectRequestParametersException;
 import edu.java.api.exceptions.InvalidUrlFormatException;
 import edu.java.api.exceptions.LinkAlreadyTrackedException;
 import edu.java.api.exceptions.LinkNotFoundException;
-import edu.java.api.exceptions.UnsupportedUrlHostException;
-import edu.java.api.services.ChatService;
-import edu.java.api.services.LinksService;
+import edu.java.api.exceptions.UnsupportedUrlException;
+import edu.java.api.services.jdbc.JdbcChatService;
+import edu.java.api.services.jdbc.JdbcLinksService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,15 +36,15 @@ public class ControllerAdviceTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private ChatService chatService;
+    private JdbcChatService jdbcChatService;
 
     @MockBean
-    private LinksService linksService;
+    private JdbcLinksService jdbcLinksService;
     @Test
     @SneakyThrows
     @DisplayName("Тест ControllerAdvice.incorrectRequest. Должен поймать выброшенное исключение при попытке удалить чат с отрицательным айди")
     public void deleteChat_whenRequestedIdIsIncorrect_shouldReturnCorrectErrorResponse() {
-        Mockito.doThrow(IncorrectRequestParametersException.class).when(chatService).deleteChat(-1L);
+        Mockito.doThrow(IncorrectRequestParametersException.class).when(jdbcChatService).deleteChat(-1L);
         var result = mockMvc.perform(
             MockMvcRequestBuilders
                 .delete("/tg-chat/-1")
@@ -62,7 +62,7 @@ public class ControllerAdviceTest {
     @SneakyThrows
     @DisplayName("Тест ControllerAdvice.chatDoesNotExist. Должен поймать выброшенное исключение при попытке удалить несуществующий чат")
     public void deleteChat_whenChatNotFound_shouldReturnCorrectErrorResponse() {
-        Mockito.doThrow(ChatDoesNotExistException.class).when(chatService).deleteChat(1L);
+        Mockito.doThrow(ChatDoesNotExistException.class).when(jdbcChatService).deleteChat(1L);
         var result = mockMvc.perform(
             MockMvcRequestBuilders
                 .delete("/tg-chat/1")
@@ -80,7 +80,7 @@ public class ControllerAdviceTest {
     @SneakyThrows
     @DisplayName("Тест ControllerAdvice.chatAlreadyRegistered. Должен поймать выброшенное исключение при попытке зарегистрировать уже существующий чат")
     public void registerChat_whenChatAlreadyRegistered_shouldReturnCorrectErrorResponse() {
-        Mockito.doThrow(ChatAlreadyRegisteredException.class).when(chatService).registerChat(1L);
+        Mockito.doThrow(ChatAlreadyRegisteredException.class).when(jdbcChatService).registerChat(1L);
         var result = mockMvc.perform(
             MockMvcRequestBuilders
                 .post("/tg-chat/1")
@@ -99,7 +99,7 @@ public class ControllerAdviceTest {
     @DisplayName("Тест ControllerAdvice.linkNotFound. Должен поймать выброшенное исключение при попытке удалить несуществующую ссылку")
     public void removeLinkFromTracking_whenLinkNotFound_shouldReturnCorrectErrorResponse() {
         RemoveLinkRequest request = new RemoveLinkRequest(0L);
-        Mockito.doThrow(LinkNotFoundException.class).when(linksService).removeLinkFromTracking(1L, request);
+        Mockito.doThrow(LinkNotFoundException.class).when(jdbcLinksService).removeLinkFromTracking(1L, request);
         var result = mockMvc.perform(
             MockMvcRequestBuilders
                 .delete("/links")
@@ -125,7 +125,7 @@ public class ControllerAdviceTest {
     @DisplayName("Тест ControllerAdvice.linkAlreadyTracked. Должен поймать выброшенное исключение при попытке добавить уже существующую ссылку")
     public void addLinkToTracking_whenLinkAlreadyTracked_shouldReturnCorrectErrorResponse() {
         AddLinkRequest request = new AddLinkRequest(new URI(""));
-        Mockito.doThrow(LinkAlreadyTrackedException.class).when(linksService).addLinkToTracking(1L, request);
+        Mockito.doThrow(LinkAlreadyTrackedException.class).when(jdbcLinksService).addLinkToTracking(1L, request);
         var result = mockMvc.perform(
             MockMvcRequestBuilders
                 .post("/links")
@@ -151,7 +151,7 @@ public class ControllerAdviceTest {
     @DisplayName("Тест ControllerAdvice.invalidUrlFormat. Должен поймать выброшенное исключение при попытке добавить ссылку неправильного формата")
     public void addLinkToTracking_whenLinkHasInvalidFormat_shouldReturnCorrectErrorResponse() {
         AddLinkRequest request = new AddLinkRequest(new URI(""));
-        Mockito.doThrow(InvalidUrlFormatException.class).when(linksService).addLinkToTracking(1L, request);
+        Mockito.doThrow(InvalidUrlFormatException.class).when(jdbcLinksService).addLinkToTracking(1L, request);
         var result = mockMvc.perform(
             MockMvcRequestBuilders
                 .post("/links")
@@ -177,7 +177,7 @@ public class ControllerAdviceTest {
     @DisplayName("Тест ControllerAdvice.invalidUrlFormat. Должен поймать выброшенное исключение при попытке добавить ссылку неправильного формата")
     public void addLinkToTracking_whenLinkHostIsNotSupported_shouldReturnCorrectErrorResponse() {
         AddLinkRequest request = new AddLinkRequest(new URI(""));
-        Mockito.doThrow(UnsupportedUrlHostException.class).when(linksService).addLinkToTracking(1L, request);
+        Mockito.doThrow(UnsupportedUrlException.class).when(jdbcLinksService).addLinkToTracking(1L, request);
         var result = mockMvc.perform(
             MockMvcRequestBuilders
                 .post("/links")
@@ -195,7 +195,7 @@ public class ControllerAdviceTest {
             errorResponse = objectMapper.readValue(result.getResponse().getContentAsString(), ApiErrorResponse.class);
 
         assertThat(errorResponse.code()).isEqualTo("406");
-        assertThat(errorResponse.exceptionName()).isEqualTo(UnsupportedUrlHostException.class.getName());
+        assertThat(errorResponse.exceptionName()).isEqualTo(UnsupportedUrlException.class.getName());
     }
 
 }

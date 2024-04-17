@@ -2,6 +2,7 @@ package edu.java.scrapper.api.controllers;
 
 import edu.java.api.controllers.ChatController;
 import edu.java.api.services.ChatService;
+import edu.java.api.services.jdbc.JdbcChatService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

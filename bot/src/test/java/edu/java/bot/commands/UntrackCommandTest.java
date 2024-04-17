@@ -11,19 +11,17 @@ import edu.java.bot.models.GenericResponse;
 import edu.java.bot.models.Link;
 import edu.java.bot.models.ListLinksResponse;
 import edu.java.bot.models.RemoveLinkFromDatabaseResponse;
-import edu.java.bot.service.DefaultBotService;
+import edu.java.bot.clientService.DefaultBotService;
 import java.net.URI;
 import java.util.List;
 import java.util.Properties;
 import lombok.SneakyThrows;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.event.annotation.BeforeTestMethod;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)

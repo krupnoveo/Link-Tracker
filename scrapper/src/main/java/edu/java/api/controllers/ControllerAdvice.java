@@ -7,7 +7,7 @@ import edu.java.api.exceptions.IncorrectRequestParametersException;
 import edu.java.api.exceptions.InvalidUrlFormatException;
 import edu.java.api.exceptions.LinkAlreadyTrackedException;
 import edu.java.api.exceptions.LinkNotFoundException;
-import edu.java.api.exceptions.UnsupportedUrlHostException;
+import edu.java.api.exceptions.UnsupportedUrlException;
 import java.util.Arrays;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -89,9 +89,9 @@ public class ControllerAdvice {
         );
     }
 
-    @ExceptionHandler(UnsupportedUrlHostException.class)
+    @ExceptionHandler(UnsupportedUrlException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
-    public ApiErrorResponse unsupportedUrlHost(UnsupportedUrlHostException e) {
+    public ApiErrorResponse unsupportedUrlHost(UnsupportedUrlException e) {
         return new ApiErrorResponse(
             "Неподдерживаемый хост",
             String.valueOf(HttpStatus.NOT_ACCEPTABLE.value()),

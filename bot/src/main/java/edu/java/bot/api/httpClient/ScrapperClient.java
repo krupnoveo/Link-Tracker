@@ -4,10 +4,10 @@ import edu.java.bot.api.dto.request.AddLinkRequest;
 import edu.java.bot.api.dto.request.RemoveLinkRequest;
 import edu.java.bot.api.dto.response.ApiErrorResponse;
 import edu.java.bot.models.AddLinkToDatabaseResponse;
+import edu.java.bot.models.Chat;
 import edu.java.bot.models.GenericResponse;
 import edu.java.bot.models.ListLinksResponse;
 import edu.java.bot.models.RemoveLinkFromDatabaseResponse;
-import edu.java.bot.models.User;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -34,11 +34,10 @@ public class ScrapperClient {
         this.webClient = WebClient.create(baseUrl);
     }
 
-
-    public GenericResponse<Void> registerChat(User user) {
+    public GenericResponse<Void> registerChat(Chat chat) {
         var clientResponse = webClient
             .method(HttpMethod.POST)
-            .uri(PATH_FOR_CHAT_CONTROLLER + user.id())
+            .uri(PATH_FOR_CHAT_CONTROLLER + chat.id())
             .exchangeToMono(response -> {
                 if (response.statusCode().is2xxSuccessful()) {
                     return response.bodyToMono(Void.class);
@@ -52,10 +51,10 @@ public class ScrapperClient {
         return new GenericResponse<>(null, (ApiErrorResponse) clientResponse);
     }
 
-    public GenericResponse<Void> deleteChat(User user) {
+    public GenericResponse<Void> deleteChat(Chat chat) {
         var clientResponse = webClient
             .method(HttpMethod.DELETE)
-            .uri(PATH_FOR_CHAT_CONTROLLER + user.id())
+            .uri(PATH_FOR_CHAT_CONTROLLER + chat.id())
             .exchangeToMono(response -> {
                 if (response.statusCode().is2xxSuccessful()) {
                     return response.bodyToMono(Void.class);

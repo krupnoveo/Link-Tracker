@@ -5,10 +5,10 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.clientService.BotService;
 import edu.java.bot.models.GenericResponse;
 import edu.java.bot.models.Link;
 import edu.java.bot.models.ListLinksResponse;
-import edu.java.bot.service.BotService;
 import java.util.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -42,10 +42,11 @@ public class ListCommand extends CommandHandler {
                 properties.getProperty("command.list.listLinks.success")
             ).replyMarkup(keyboardMarkup).parseMode(ParseMode.Markdown);
         }
+        String responseErrorDescription = response.errorResponse().description();
         return new SendMessage(
             chatId,
             properties.getProperty("command.list.listLinks.fail")
-                .formatted(response.errorResponse().description().toLowerCase())
+                .formatted(responseErrorDescription != null ? responseErrorDescription.toLowerCase() : "")
         );
     }
 

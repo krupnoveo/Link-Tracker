@@ -1,7 +1,7 @@
 package edu.java.clients;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import edu.java.dto.LinkData;
+import edu.java.models.LinkData;
 import java.net.URL;
 import java.time.OffsetDateTime;
 import java.util.regex.Matcher;
@@ -12,11 +12,6 @@ public class StackOverflowClient extends BaseClient {
     private final static String BASE_URL = "https://api.stackexchange.com/" + API_VERSION;
     private final static String HOST = "stackoverflow.com";
     private final static Pattern URL_PATTERN = Pattern.compile("https://" + HOST + "/questions/\\d+/[\\w-]+");
-
-
-    public StackOverflowClient() {
-        this(BASE_URL);
-    }
 
     public StackOverflowClient(String url) {
         super(url);
@@ -45,10 +40,10 @@ public class StackOverflowClient extends BaseClient {
     }
 
     private record StackOverflowResponse(
-        @JsonProperty("items") StackOverflowEntity[] entities
+        @JsonProperty("items") StackOverflowItem[] entities
     ) {}
 
-    private record StackOverflowEntity(
+    private record StackOverflowItem(
         @JsonProperty("last_activity_date") OffsetDateTime lastUpdated
     ) {}
 }

@@ -34,19 +34,21 @@ public class ControllerAdviceTest {
     @DisplayName("Тест ControllerAdvice.incorrectRequest. Должен поймать выброшенное исключение при попытке уведомить пользователей")
     public void updateLinks_whenLinkUpdateFailed_shouldThrowError() {
         LinkUpdate linkUpdate = new LinkUpdate(1, new URI("https://ya.ru"), "some text", List.of(0L));
-        Mockito.doThrow(IncorrectRequestParametersException.class).when(service).notifyUsers(linkUpdate);
+        Mockito.doThrow(IncorrectRequestParametersException.class).when(service).notifyUsers(List.of(linkUpdate));
         var result = mockMvc.perform(
             MockMvcRequestBuilders
                 .post("/updates")
                 .content("""
-                    {
-                        "urlId": 1,
-                        "url": "https://ya.ru",
-                        "description": "some text",
-                        "chatIds": [
-                            0
-                        ]
-                    }
+                    [
+                        {
+                            "urlId": 1,
+                            "url": "https://ya.ru",
+                            "description": "some text",
+                            "chatIds": [
+                                0
+                            ]
+                        }
+                    ]
                     """
                 )
                 .contentType("application/json")

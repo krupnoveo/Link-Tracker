@@ -2,7 +2,7 @@ package edu.java.scrapper.clients;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import edu.java.clients.StackOverflowClient;
-import edu.java.dto.LinkData;
+import edu.java.models.LinkData;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -55,7 +55,7 @@ public class StackOverflowClientTest {
     @Test
     @SneakyThrows
     public void isSupported_shouldReturnTrue_whenLinkIsValid() {
-        StackOverflowClient stackOverflowClient = new StackOverflowClient();
+        StackOverflowClient stackOverflowClient = new StackOverflowClient(server.baseUrl());
         URL url = new URI("https://stackoverflow.com/questions/123/help").toURL();
 
         assertThat(stackOverflowClient.isUrlSupported(url)).isTrue();
@@ -64,7 +64,7 @@ public class StackOverflowClientTest {
     @Test
     @SneakyThrows
     public void isSupported_shouldReturnFalse_whenLinkIsInvalid() {
-        StackOverflowClient stackOverflowClient = new StackOverflowClient();
+        StackOverflowClient stackOverflowClient = new StackOverflowClient(server.baseUrl());
         URL url1 = new URI("https://stackoverflow.com/123").toURL();
         URL url2 = new URI("https://github.com/123/help").toURL();
         URL url3 = new URI("http://stackoverflow/123/help").toURL();

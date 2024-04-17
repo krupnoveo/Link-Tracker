@@ -8,7 +8,7 @@ import edu.java.bot.api.dto.response.ApiErrorResponse;
 import edu.java.bot.models.GenericResponse;
 import edu.java.bot.models.Link;
 import edu.java.bot.models.ListLinksResponse;
-import edu.java.bot.service.DefaultBotService;
+import edu.java.bot.clientService.DefaultBotService;
 import java.net.URI;
 import java.util.List;
 import java.util.Properties;
