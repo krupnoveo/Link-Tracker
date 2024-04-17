@@ -3,11 +3,12 @@ package edu.java.bot.service;
 import edu.java.bot.api.httpClient.ScrapperClient;
 import edu.java.bot.api.dto.request.AddLinkRequest;
 import edu.java.bot.api.dto.request.RemoveLinkRequest;
+import edu.java.bot.clientService.DefaultBotService;
 import edu.java.bot.models.AddLinkToDatabaseResponse;
+import edu.java.bot.models.Chat;
 import edu.java.bot.models.GenericResponse;
 import edu.java.bot.models.ListLinksResponse;
 import edu.java.bot.models.RemoveLinkFromDatabaseResponse;
-import edu.java.bot.models.User;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,11 +24,11 @@ public class DefaultBotServiceTest {
         ScrapperClient client = Mockito.mock(ScrapperClient.class);
         DefaultBotService botService = new DefaultBotService(client);
         GenericResponse<Void> response = new GenericResponse<>(null, null);
-        User user = new User(1L);
-        Mockito.when(client.registerChat(user)).thenReturn(response);
+        Chat chat = new Chat(1L);
+        Mockito.when(client.registerChat(chat)).thenReturn(response);
 
         GenericResponse<Void> expected = new GenericResponse<>(null, null);
-        GenericResponse<Void> actual = botService.registerUser(user);
+        GenericResponse<Void> actual = botService.registerUser(chat);
         assertThat(actual).isEqualTo(expected);
     }
 
