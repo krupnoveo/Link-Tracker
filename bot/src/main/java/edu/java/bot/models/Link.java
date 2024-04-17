@@ -1,5 +1,5 @@
 package edu.java.bot.models;
 
-import java.util.UUID;
+import java.net.URI;
 
-public record Link(String url, UUID uuid) {}
+public record Link(long id, URI url) {}

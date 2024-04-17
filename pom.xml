@@ -45,6 +45,9 @@
         <checkstyle.version>10.12.7</checkstyle.version>
 
         <netty-resolver-dns-native-macos.version>4.1.107.Final</netty-resolver-dns-native-macos.version>
+
+        <openapi-starter-webmvc.version>2.3.0</openapi-starter-webmvc.version>
+
     </properties>
 
     <modules>
@@ -93,6 +96,13 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${openapi-starter-webmvc.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

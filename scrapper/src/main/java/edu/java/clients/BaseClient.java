@@ -8,4 +8,8 @@ public abstract class BaseClient implements Client {
     public BaseClient(String url) {
         this.webClient = WebClient.create(url);
     }
+
+    public BaseClient(WebClient webClient) {
+        this.webClient = webClient;
+    }
 }
