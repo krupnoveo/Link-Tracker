@@ -83,6 +83,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <dependency>
             <groupId>org.wiremock</groupId>
             <artifactId>wiremock-standalone</artifactId>
@@ -125,7 +126,6 @@
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
         </dependency>
 
-
         <!-- Database -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -137,7 +137,6 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
-
     </dependencies>
 
     <build>

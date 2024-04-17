@@ -34,7 +34,6 @@ public class ScrapperClient {
         this.webClient = WebClient.create(baseUrl);
     }
 
-
     public GenericResponse<Void> registerChat(Chat chat) {
         var clientResponse = webClient
             .method(HttpMethod.POST)
