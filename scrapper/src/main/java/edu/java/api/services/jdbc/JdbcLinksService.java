@@ -5,7 +5,7 @@ import edu.java.api.dto.request.RemoveLinkRequest;
 import edu.java.api.dto.response.LinkResponse;
 import edu.java.api.dto.response.ListLinksResponse;
 import edu.java.api.services.LinksService;
-import edu.java.clientsHolder.ClientsHolder;
+import edu.java.clients.holder.ClientsHolder;
 import edu.java.domain.ChatsToLinksRepository;
 import edu.java.domain.LinksRepository;
 import edu.java.models.LinkData;
@@ -14,10 +14,12 @@ import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 @Log4j2
 @Service
+@ConditionalOnProperty(name = "database.access-via", havingValue = "jdbc")
 @RequiredArgsConstructor
 public class JdbcLinksService implements LinksService {
     private final LinksRepository linksRepository;
@@ -25,20 +27,23 @@ public class JdbcLinksService implements LinksService {
     private final ClientsHolder clientsHolder;
 
     @SneakyThrows
+    @Override
     public ListLinksResponse getTrackedLinks(long chatId) {
         log.info("Getting tracked links...");
         return new ListLinksResponse(chatsToLinksRepository.findAllByChatId(chatId));
     }
 
+    @Override
     public LinkResponse addLinkToTracking(long chatId, AddLinkRequest addLinkRequest) {
         log.info("Adding link...");
         URI uri = addLinkRequest.link();
-        long linkId = linksRepository.add(uri, getOffsetDateTimeFromLink(uri), OffsetDateTime.now());
+        long linkId = linksRepository.add(uri, getLastUpdatedTimeFromLink(uri), OffsetDateTime.now());
         chatsToLinksRepository.add(chatId, linkId, uri);
         return new LinkResponse(linkId, uri);
     }
 
     @SneakyThrows
+    @Override
     public LinkResponse removeLinkFromTracking(long chatId, RemoveLinkRequest removeLinkRequest) {
         log.info("Deleting link...");
         long linkId = removeLinkRequest.linkId();
@@ -50,8 +55,8 @@ public class JdbcLinksService implements LinksService {
         return new LinkResponse(linkId, uri);
     }
 
-    private OffsetDateTime getOffsetDateTimeFromLink(URI uri) {
-        LinkData linkData = clientsHolder.checkURl(uri);
+    private OffsetDateTime getLastUpdatedTimeFromLink(URI uri) {
+        LinkData linkData = clientsHolder.checkURl(uri, null).get(0);
         if (linkData.url() != null && linkData.lastUpdated() != null) {
             return linkData.lastUpdated();
         }

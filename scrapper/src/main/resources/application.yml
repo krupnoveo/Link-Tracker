@@ -3,14 +3,18 @@ app:
     enable: true
     interval: 10s
     force-check-delay: 20s
-  git-hub-token: ${GITHUB_TOKEN}
 
 clients:
   github:
     base-url: https://api.github.com
+    token: ${GITHUB_TOKEN}
   stackoverflow:
     base-url: https://api.stackexchange.com/2.3
+    key: ${STACKOVERFLOW_KEY}
+    token: ${STACKOVERFLOW_TOKEN}
 
+database:
+  access-via: jooq
 spring:
   config:
     import: optional:file:.env[.properties]

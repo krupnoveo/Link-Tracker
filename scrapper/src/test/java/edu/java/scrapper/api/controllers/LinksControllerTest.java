@@ -9,11 +9,13 @@ import edu.java.api.dto.response.ListLinksResponse;
 import edu.java.api.services.LinksService;
 import java.net.URI;
 import java.util.List;
+import edu.java.api.services.jooq.JooqLinksService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,6 +29,7 @@ public class LinksControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
+    @Qualifier("jooqLinksService")
     private LinksService service;
 
     @Autowired

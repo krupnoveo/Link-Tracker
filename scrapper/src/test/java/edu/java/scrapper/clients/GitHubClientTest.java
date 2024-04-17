@@ -15,6 +15,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.net.URI;
 import java.net.URL;
 import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.Properties;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,23 +27,26 @@ public class GitHubClientTest {
     public static void startServer() {
         server = new WireMockServer();
         server
-            .stubFor(get(urlPathEqualTo("/repos/krupnoveo/Link-Tracker"))
+            .stubFor(get(urlPathEqualTo("/repos/krupnoveo/Link-Tracker/events"))
                 .willReturn(aResponse()
                     .withStatus(200)
                     .withHeader("Content-Type", "application/json")
                     .withBody("""
-                            {
-                                "id": 751923883,
-                                "full_name":"krupnoveo/Link-Tracker",
-                                "created_at":"2024-02-02T16:16:12Z",
-                                "updated_at":"2024-02-02T16:49:20Z",
-                                "pushed_at":"2024-02-12T20:16:50Z"
-                            }
+                            [
+                                {
+                                    "type": "PushEvent",
+                                    "payload": {
+                                        "size": 1,
+                                        "ref": "refs/heads/main"
+                                    },
+                                    "created_at": "2024-03-17T18:15:35Z"
+                                }
+                            ]
                             """
                     )
                 )
             );
-        server.stubFor(get(urlPathEqualTo("/repos/admin/repositoriy"))
+        server.stubFor(get(urlPathEqualTo("/repos/admin/repositoriy/events"))
             .willReturn(aResponse()
                 .withStatus(404)
                 ));
@@ -51,7 +56,9 @@ public class GitHubClientTest {
     @Test
     @SneakyThrows
     public void isSupported_shouldReturnTrue_whenLinkIsValid() {
-        GitHubClient gitHubClient = new GitHubClient(server.baseUrl());
+        Properties properties = new Properties();
+        properties.load(getClass().getResourceAsStream("/messages.properties"));
+        GitHubClient gitHubClient = new GitHubClient(server.baseUrl(), properties);
         URL url = new URI("https://github.com/krupnoveo/Link-Tracker").toURL();
 
         assertThat(gitHubClient.isUrlSupported(url)).isTrue();
@@ -60,8 +67,9 @@ public class GitHubClientTest {
     @Test
     @SneakyThrows
     public void isSupported_shouldReturnFalse_whenLinkIsInvalid() {
-        ApplicationConfig config = Mockito.mock(ApplicationConfig.class);
-        GitHubClient gitHubClient = new GitHubClient(server.baseUrl(), config);
+        Properties properties = new Properties();
+        properties.load(getClass().getResourceAsStream("/messages.properties"));
+        GitHubClient gitHubClient = new GitHubClient(server.baseUrl(), "", properties);
         URL url1 = new URI("https://github.com/krupnoveo").toURL();
         URL url2 = new URI("https://gitlab.com/krupnoveo/Link-Tracker").toURL();
         URL url3 = new URI("http://gitlab.com/krupnoveo/Link-Tracker").toURL();
@@ -74,25 +82,43 @@ public class GitHubClientTest {
 
     @Test
     @SneakyThrows
-    public void checkURL_shouldReturnCorrectAnswer_whenServerResponse200() {
-        GitHubClient gitHubClient = new GitHubClient(server.baseUrl());
+    public void checkURL_shouldReturnCorrectAnswer_whenServerResponse200_and_lastUpdatedIsNotNull() {
+        Properties properties = new Properties();
+        properties.load(getClass().getResourceAsStream("/messages.properties"));
+        GitHubClient gitHubClient = new GitHubClient(server.baseUrl(), properties);
         URL url = new URI("https://github.com/krupnoveo/Link-Tracker").toURL();
-        LinkData data = gitHubClient.checkURL(url);
-        OffsetDateTime date = OffsetDateTime.parse("2024-02-02T16:49:20Z");
+        List<LinkData> data = gitHubClient.checkURL(url, OffsetDateTime.MIN);
+        OffsetDateTime date = OffsetDateTime.parse("2024-03-17T18:15:35Z");
 
-        assertThat(url).isEqualTo(data.url());
-        assertThat(date).isEqualTo(data.lastUpdated());
+        assertThat(url).isEqualTo(data.get(0).url());
+        assertThat(date).isEqualTo(data.get(0).lastUpdated());
+    }
+
+    @Test
+    @SneakyThrows
+    public void checkURL_shouldReturnCorrectAnswer_whenServerResponse200_and_lastUpdatedIsNull() {
+        Properties properties = new Properties();
+        properties.load(getClass().getResourceAsStream("/messages.properties"));
+        GitHubClient gitHubClient = new GitHubClient(server.baseUrl(), properties);
+        URL url = new URI("https://github.com/krupnoveo/Link-Tracker").toURL();
+        List<LinkData> data = gitHubClient.checkURL(url, null);
+        OffsetDateTime date = OffsetDateTime.parse("2024-03-17T18:15:35Z");
+
+        assertThat(url).isEqualTo(data.get(0).url());
+        assertThat(date).isEqualTo(data.get(0).lastUpdated());
     }
 
     @Test
     @SneakyThrows
     public void checkURL_shouldReturnCorrectAnswer_whenServerResponse404() {
-        GitHubClient gitHubClient = new GitHubClient(server.baseUrl());
+        Properties properties = new Properties();
+        properties.load(getClass().getResourceAsStream("/messages.properties"));
+        GitHubClient gitHubClient = new GitHubClient(server.baseUrl(), properties);
         URL url = new URI("https://github.com/admin/repositoriy").toURL();
-        LinkData data = gitHubClient.checkURL(url);
+        List<LinkData> data = gitHubClient.checkURL(url, OffsetDateTime.MIN);
 
-        assertThat(data.url()).isNull();
-        assertThat(data.lastUpdated()).isNull();
+        assertThat(data.get(0).url()).isNull();
+        assertThat(data.get(0).lastUpdated()).isNull();
     }
 
     @AfterAll

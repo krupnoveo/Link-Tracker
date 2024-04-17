@@ -8,7 +8,8 @@ import java.net.URI;
 import java.net.URL;
 import java.time.OffsetDateTime;
 import java.util.List;
-import edu.java.clientsHolder.ClientsHolder;
+import java.util.Map;
+import edu.java.clients.holder.ClientsHolder;
 import edu.java.models.LinkData;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
@@ -28,15 +29,15 @@ public class ClientsHolderTest {
         URL url = uri.toURL();
         OffsetDateTime time = OffsetDateTime.now();
         Mockito.when(gitHubClient.isUrlSupported(url)).thenReturn(true);
-        Mockito.when(gitHubClient.checkURL(url)).thenReturn(new LinkData(url, time));
+        Mockito.when(gitHubClient.checkURL(url, OffsetDateTime.MIN)).thenReturn(List.of(new LinkData(url, time, "", Map.of())));
         Mockito.when(stackOverflowClient.isUrlSupported(url)).thenReturn(false);
 
         ClientsHolder clientsHolder = new ClientsHolder(List.of(gitHubClient, stackOverflowClient));
 
-        LinkData actual = clientsHolder.checkURl(uri);
-        LinkData expected = new LinkData(url, time);
+        List<LinkData> actual = clientsHolder.checkURl(uri, OffsetDateTime.MIN);
+        List<LinkData> expected = List.of(new LinkData(url, time, "", Map.of()));
 
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);
     }
 
     @Test
@@ -49,13 +50,13 @@ public class ClientsHolderTest {
         URL url = uri.toURL();
         OffsetDateTime time = OffsetDateTime.now();
         Mockito.when(gitHubClient.isUrlSupported(url)).thenReturn(false);
-        Mockito.when(stackOverflowClient.checkURL(url)).thenReturn(new LinkData(url, time));
+        Mockito.when(stackOverflowClient.checkURL(url, OffsetDateTime.MIN)).thenReturn(List.of(new LinkData(url, time, "", Map.of())));
         Mockito.when(stackOverflowClient.isUrlSupported(url)).thenReturn(true);
 
         ClientsHolder clientsHolder = new ClientsHolder(List.of(gitHubClient, stackOverflowClient));
 
-        LinkData actual = clientsHolder.checkURl(uri);
-        LinkData expected = new LinkData(url, time);
+        List<LinkData> actual = clientsHolder.checkURl(uri, OffsetDateTime.MIN);
+        List<LinkData> expected = List.of(new LinkData(url, time, "", Map.of()));
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -74,7 +75,7 @@ public class ClientsHolderTest {
         ClientsHolder clientsHolder = new ClientsHolder(List.of(gitHubClient, stackOverflowClient));
 
         UnsupportedUrlException exception = assertThrows(UnsupportedUrlException.class, () -> {
-            clientsHolder.checkURl(uri);
+            clientsHolder.checkURl(uri, OffsetDateTime.MIN);
         });
         assertThat(exception.getMessage()).isEqualTo(
             "Отслеживание ссылки %s на данный ресурс (часть ресурса) не поддерживается".formatted(uri)
@@ -91,7 +92,7 @@ public class ClientsHolderTest {
         ClientsHolder clientsHolder = new ClientsHolder(List.of(gitHubClient, stackOverflowClient));
 
         InvalidUrlFormatException exception = assertThrows(InvalidUrlFormatException.class, () -> {
-            clientsHolder.checkURl(uri);
+            clientsHolder.checkURl(uri, OffsetDateTime.MIN);
         });
         assertThat(exception.getMessage()).isEqualTo(
             "Ссылка %s имеет неправильный формат".formatted(uri)

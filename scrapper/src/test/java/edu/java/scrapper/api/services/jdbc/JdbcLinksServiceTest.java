@@ -5,13 +5,14 @@ import edu.java.api.dto.request.RemoveLinkRequest;
 import edu.java.api.dto.response.LinkResponse;
 import edu.java.api.dto.response.ListLinksResponse;
 import edu.java.api.services.jdbc.JdbcLinksService;
-import edu.java.clientsHolder.ClientsHolder;
+import edu.java.clients.holder.ClientsHolder;
 import edu.java.domain.ChatsToLinksRepository;
 import edu.java.domain.LinksRepository;
 import edu.java.models.LinkData;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Map;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,20 +51,24 @@ public class JdbcLinksServiceTest {
     @Test
     @SneakyThrows
     public void addLinkToTracking_shouldReturnCorrectAnswer() {
-        Mockito.mockStatic(OffsetDateTime.class, Mockito.CALLS_REAL_METHODS);
-        Mockito.when(OffsetDateTime.now()).thenReturn(OffsetDateTime.MIN);
-        long chatId = 1L;
-        AddLinkRequest addLinkRequest = new AddLinkRequest(new URI("https://ya.ru"));
-        URI uri = addLinkRequest.link();
-        Mockito.when(clientsHolder.checkURl(uri)).thenReturn(new LinkData(uri.toURL(), OffsetDateTime.MIN));
-        Mockito.when(linksRepository.add(addLinkRequest.link(), OffsetDateTime.MIN, OffsetDateTime.MIN)).thenReturn(1L);
+        try (var mock = Mockito.mockStatic(OffsetDateTime.class)) {
+            Mockito.when(OffsetDateTime.now()).thenReturn(OffsetDateTime.MIN);
+            long chatId = 1L;
+            AddLinkRequest addLinkRequest = new AddLinkRequest(new URI("https://ya.ru"));
+            URI uri = addLinkRequest.link();
+            Mockito.when(clientsHolder.checkURl(uri, null)).thenReturn(
+                List.of(new LinkData(uri.toURL(), OffsetDateTime.MIN, "", Map.of()))
+            );
+            Mockito.when(linksRepository.add(addLinkRequest.link(), OffsetDateTime.MIN, OffsetDateTime.MIN)).thenReturn(1L);
 
-        LinkResponse actual = service.addLinkToTracking(chatId, addLinkRequest);
+            LinkResponse actual = service.addLinkToTracking(chatId, addLinkRequest);
 
-        Mockito.verify(chatsToLinksRepository).add(chatId, 1L, uri);
+            Mockito.verify(chatsToLinksRepository).add(chatId, 1L, uri);
 
-        LinkResponse expected = new LinkResponse(1L, uri);
-        assertThat(actual).isEqualTo(expected);
+            LinkResponse expected = new LinkResponse(1L, uri);
+            assertThat(actual).isEqualTo(expected);
+        }
+
     }
 
     @Test
