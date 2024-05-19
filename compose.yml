@@ -63,9 +63,30 @@ services:
     depends_on:
       - zoo1
 
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - "9090:9090"
+  grafana:
+    image: grafana/grafana-oss
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana:/var/lib/grafana
+    user: "0"
+
 volumes:
   postgresql: { }
   kafka1: { }
+  prometheus: { }
+  grafana: { }
 
 networks:
   backend: { }

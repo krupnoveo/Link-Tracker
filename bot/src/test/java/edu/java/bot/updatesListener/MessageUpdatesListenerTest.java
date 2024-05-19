@@ -14,6 +14,9 @@ import edu.java.bot.printerToChat.DefaultChatResponser;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.prometheus.PrometheusConfig;
+import io.micrometer.prometheus.PrometheusMeterRegistry;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,6 +36,7 @@ public class MessageUpdatesListenerTest {
         properties.load(getClass().getResourceAsStream("/messages.properties"));
 
         CommandsHolder holder = Mockito.mock(CommandsHolder.class);
+        MeterRegistry registry = new PrometheusMeterRegistry(PrometheusConfig.DEFAULT);
         StartCommand command = Mockito.mock(StartCommand.class);
         DefaultChatResponser responser = Mockito.mock(DefaultChatResponser.class);
         Update update1 = Mockito.mock(Update.class);
@@ -58,7 +62,12 @@ public class MessageUpdatesListenerTest {
         Mockito.when(holder.getCommandHandlers()).thenReturn(Map.of(
             properties.getProperty("command.start.name"), command
         ));
-        UpdatesListener listener = new MessageUpdatesListener(responser, holder, properties);
+        UpdatesListener listener = new MessageUpdatesListener(
+            responser,
+            holder,
+            properties,
+            registry
+        );
 
         SendMessage expected = new SendMessage(
             chatId,
@@ -77,6 +86,7 @@ public class MessageUpdatesListenerTest {
         Properties properties = new Properties();
         properties.load(getClass().getResourceAsStream("/messages.properties"));
 
+        MeterRegistry registry = new PrometheusMeterRegistry(PrometheusConfig.DEFAULT);
         CommandsHolder holder = Mockito.mock(CommandsHolder.class);
         StartCommand startCommand = Mockito.mock(StartCommand.class);
         UntrackCommand untrackCommand = Mockito.mock(UntrackCommand.class);
@@ -108,7 +118,12 @@ public class MessageUpdatesListenerTest {
             properties.getProperty("command.start.name"), startCommand,
             properties.getProperty("command.untrack.name"), untrackCommand
         ));
-        UpdatesListener listener = new MessageUpdatesListener(responser, holder, properties);
+        UpdatesListener listener = new MessageUpdatesListener(
+            responser,
+            holder,
+            properties,
+            registry
+        );
 
         SendMessage expectedFromStart = new SendMessage(
             chatId,
