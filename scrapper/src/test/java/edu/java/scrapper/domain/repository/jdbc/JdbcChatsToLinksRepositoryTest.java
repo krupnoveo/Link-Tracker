@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
     "clients.github.token=1",
     "clients.stackoverflow.token=1",
     "clients.stackoverflow.key=1",
-    "database.access-via=jdbc"
+    "app.database-access-type=jdbc"
 })
 public class JdbcChatsToLinksRepositoryTest extends IntegrationEnvironment {
     @Autowired

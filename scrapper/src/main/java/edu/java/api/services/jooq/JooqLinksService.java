@@ -8,18 +8,17 @@ import edu.java.api.services.LinksService;
 import edu.java.clients.holder.ClientsHolder;
 import edu.java.domain.ChatsToLinksRepository;
 import edu.java.domain.LinksRepository;
+import edu.java.models.Chat;
 import edu.java.models.LinkData;
+import edu.java.models.LinkDatabaseInformation;
 import java.net.URI;
 import java.time.OffsetDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Service;
 
 @Log4j2
-@Service
-@ConditionalOnProperty(name = "database.access-via", havingValue = "jooq")
 @RequiredArgsConstructor
 public class JooqLinksService implements LinksService {
     private final LinksRepository linksRepository;
@@ -53,6 +52,23 @@ public class JooqLinksService implements LinksService {
             linksRepository.remove(linkId);
         }
         return new LinkResponse(linkId, uri);
+    }
+
+    @Override
+    public List<LinkDatabaseInformation> getAllLinksWhichWereNotCheckedForNminutes(int minutes) {
+        return linksRepository.getAllLinksWhichWereNotCheckedBeforeDateTimeCriteria(
+            OffsetDateTime.now().minusMinutes(minutes)
+        );
+    }
+
+    @Override
+    public void updateLinkInformationInDatabase(OffsetDateTime lastUpdated, OffsetDateTime lastChecked, long urlId) {
+        linksRepository.updateLinkInformationInDatabase(lastUpdated, lastChecked, urlId);
+    }
+
+    @Override
+    public List<Chat> getChatsForLink(long urlId) {
+        return chatsToLinksRepository.getChatsForLink(urlId);
     }
 
     private OffsetDateTime getLastUpdatedTimeFromLink(URI uri) {

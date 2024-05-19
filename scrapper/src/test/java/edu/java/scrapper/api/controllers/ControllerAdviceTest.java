@@ -13,7 +13,7 @@ import edu.java.api.exceptions.InvalidUrlFormatException;
 import edu.java.api.exceptions.LinkAlreadyTrackedException;
 import edu.java.api.exceptions.LinkNotFoundException;
 import edu.java.api.exceptions.UnsupportedUrlException;
-import edu.java.api.services.jdbc.JdbcChatService;
+import edu.java.api.services.jdbc.JdbcChatsService;
 import edu.java.api.services.jdbc.JdbcLinksService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
@@ -36,7 +36,7 @@ public class ControllerAdviceTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private JdbcChatService jdbcChatService;
+    private JdbcChatsService jdbcChatService;
 
     @MockBean
     private JdbcLinksService jdbcLinksService;

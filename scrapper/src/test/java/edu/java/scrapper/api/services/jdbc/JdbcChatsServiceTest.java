@@ -1,6 +1,6 @@
 package edu.java.scrapper.api.services.jdbc;
 
-import edu.java.api.services.jdbc.JdbcChatService;
+import edu.java.api.services.jdbc.JdbcChatsService;
 import edu.java.domain.ChatsRepository;
 import edu.java.domain.ChatsToLinksRepository;
 import edu.java.domain.LinksRepository;
@@ -14,7 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class JdbcChatServiceTest {
+public class JdbcChatsServiceTest {
     @Mock
     private ChatsRepository chatsRepository;
     @Mock
@@ -22,7 +22,7 @@ public class JdbcChatServiceTest {
     @Mock
     private ChatsToLinksRepository chatsToLinksRepository;
     @InjectMocks
-    private JdbcChatService chatService;
+    private JdbcChatsService chatService;
 
     @Test
     public void registerChat_shouldWorkCorrectly() {

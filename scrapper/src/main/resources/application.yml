@@ -3,6 +3,7 @@ app:
     enable: true
     interval: 10s
     force-check-delay: 20s
+  database-access-type: jpa
 
 clients:
   github:
@@ -13,8 +14,6 @@ clients:
     key: ${STACKOVERFLOW_KEY}
     token: ${STACKOVERFLOW_TOKEN}
 
-database:
-  access-via: jooq
 spring:
   config:
     import: optional:file:.env[.properties]
@@ -27,6 +26,9 @@ spring:
     url: ${DATABASE_URL}
     password: ${DATABASE_USERNAME}
     username: ${DATABASE_USERNAME}
+  jpa:
+    hibernate:
+      ddl-auto: validate
 
 server:
   port: 8080

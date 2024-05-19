@@ -11,15 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Repository;
 import static edu.java.domain.jooq.tables.ChatToLink.CHAT_TO_LINK;
 import static edu.java.domain.jooq.tables.Link.LINK;
 
 
-@Repository
 @RequiredArgsConstructor
-@ConditionalOnProperty(name = "database.access-via", havingValue = "jooq")
 public class JooqChatsToLinksRepository implements ChatsToLinksRepository {
     private final DSLContext context;
 

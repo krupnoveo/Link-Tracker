@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
     "clients.github.token=1",
     "clients.stackoverflow.token=1",
     "clients.stackoverflow.key=1",
-    "database.access-via=jooq"
+    "app.database-access-type=jooq"
 })
 public class JooqLinksRepositoryTest extends IntegrationEnvironment {
     @Autowired

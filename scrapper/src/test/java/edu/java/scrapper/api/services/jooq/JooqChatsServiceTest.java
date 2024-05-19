@@ -1,6 +1,6 @@
 package edu.java.scrapper.api.services.jooq;
 
-import edu.java.api.services.jooq.JooqChatService;
+import edu.java.api.services.jooq.JooqChatsService;
 import edu.java.domain.ChatsRepository;
 import edu.java.domain.ChatsToLinksRepository;
 import edu.java.domain.LinksRepository;
@@ -14,7 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class JooqChatServiceTest {
+public class JooqChatsServiceTest {
     @Mock
     private ChatsRepository chatsRepository;
     @Mock
@@ -22,7 +22,7 @@ public class JooqChatServiceTest {
     @Mock
     private ChatsToLinksRepository chatsToLinksRepository;
     @InjectMocks
-    private JooqChatService chatService;
+    private JooqChatsService chatService;
 
     @Test
     public void registerChat_shouldWorkCorrectly() {
