@@ -1,8 +1,10 @@
 package edu.java.bot.api.controllers;
 
+import edu.java.bot.api.controllers.rateLimit.RateLimit;
 import edu.java.bot.api.dto.request.LinkUpdate;
 import edu.java.bot.api.service.LinkUpdatesService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +23,11 @@ public class UpdateLinkController {
 
     @PostMapping
     @Operation(summary = "Отправить обновление")
-    public void updateLinks(@RequestBody @Valid List<LinkUpdate> linkUpdates) {
+    @RateLimit
+    public void updateLinks(
+        @RequestBody @Valid List<LinkUpdate> linkUpdates,
+        HttpServletRequest request
+    ) {
         service.notifyUsers(linkUpdates);
     }
 }

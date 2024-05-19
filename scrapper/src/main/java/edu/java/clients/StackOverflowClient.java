@@ -2,25 +2,39 @@ package edu.java.clients;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.java.models.LinkData;
+import edu.java.models.RetryRule;
+import edu.java.util.RetryFactory;
 import java.net.URL;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.springframework.web.reactive.function.client.WebClient;
 
 public class StackOverflowClient extends BaseClient {
 
     private String keyAndToken = "";
 
-    public StackOverflowClient(String url, Properties properties, String key, String token) {
-        super(url, properties);
+    public StackOverflowClient(String url, Properties properties, String key, String token, RetryRule rule) {
+        super(
+            WebClient.builder()
+                .baseUrl(url)
+                .filter(RetryFactory.createFilter(rule))
+                .build(),
+            properties);
         initializeFields();
         this.keyAndToken = "&access_token=" + token + "&key=" + key;
     }
 
-    public StackOverflowClient(String url, Properties properties) {
-        super(url, properties);
+    public StackOverflowClient(String url, Properties properties, RetryRule rule) {
+        super(
+            WebClient.builder()
+                .baseUrl(url)
+                .filter(RetryFactory.createFilter(rule))
+                .build(),
+            properties
+        );
         initializeFields();
     }
 

@@ -4,6 +4,7 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import edu.java.bot.api.dto.request.AddLinkRequest;
 import edu.java.bot.api.dto.request.RemoveLinkRequest;
 import edu.java.bot.api.dto.response.ApiErrorResponse;
+import edu.java.bot.models.RetryRule;
 import edu.java.bot.models.AddLinkToDatabaseResponse;
 import edu.java.bot.models.GenericResponse;
 import edu.java.bot.models.Link;
@@ -13,6 +14,7 @@ import edu.java.bot.models.Chat;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import java.net.URI;
 import java.util.List;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -25,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ScrapperClientTest {
     private final static String PATH_FOR_CHAT_CONTROLLER = "/tg-chat/1";
     private final static String PATH_FOR_LINKS_CONTROLLER = "/links";
+    private final RetryRule rule = Mockito.mock(RetryRule.class);
 
 
 
@@ -39,7 +42,7 @@ public class ScrapperClientTest {
             )
         );
         server.start();
-        ScrapperClient client = new ScrapperClient(server.baseUrl());
+        ScrapperClient client = new ScrapperClient(server.baseUrl(), rule);
         GenericResponse<Void> actual = client.registerChat(new Chat(1L));
 
         assertThat(actual.errorResponse()).isNull();
@@ -69,7 +72,7 @@ public class ScrapperClientTest {
             )
         );
         server.start();
-        ScrapperClient client = new ScrapperClient(server.baseUrl());
+        ScrapperClient client = new ScrapperClient(server.baseUrl(), rule);
         GenericResponse<Void> actual = client.registerChat(new Chat(1L));
         GenericResponse<Void> expected = new GenericResponse<>(null, new ApiErrorResponse(
             "string",
@@ -94,7 +97,7 @@ public class ScrapperClientTest {
             )
         );
         server.start();
-        ScrapperClient client = new ScrapperClient(server.baseUrl());
+        ScrapperClient client = new ScrapperClient(server.baseUrl(), rule);
         GenericResponse<Void> actual = client.deleteChat(new Chat(1L));
 
         assertThat(actual.errorResponse()).isNull();
@@ -124,7 +127,7 @@ public class ScrapperClientTest {
             )
         );
         server.start();
-        ScrapperClient client = new ScrapperClient(server.baseUrl());
+        ScrapperClient client = new ScrapperClient(server.baseUrl(), rule);
         GenericResponse<Void> actual = client.deleteChat(new Chat(1L));
         GenericResponse<Void> expected = new GenericResponse<>(null, new ApiErrorResponse(
             "string",
@@ -160,7 +163,7 @@ public class ScrapperClientTest {
             )
         );
         server.start();
-        ScrapperClient client = new ScrapperClient(server.baseUrl());
+        ScrapperClient client = new ScrapperClient(server.baseUrl(), rule);
         GenericResponse<ListLinksResponse> actual = client.listLinks(1L);
         GenericResponse<ListLinksResponse> expected = new GenericResponse<>(
             new ListLinksResponse(List.of(new Link(0L, new URI("string")))), null
@@ -193,7 +196,7 @@ public class ScrapperClientTest {
             )
         );
         server.start();
-        ScrapperClient client = new ScrapperClient(server.baseUrl());
+        ScrapperClient client = new ScrapperClient(server.baseUrl(), rule);
         GenericResponse<ListLinksResponse> actual = client.listLinks(1L);
         GenericResponse<ListLinksResponse> expected = new GenericResponse<>(
             null, new ApiErrorResponse(
@@ -226,7 +229,7 @@ public class ScrapperClientTest {
             )
         );
         server.start();
-        ScrapperClient client = new ScrapperClient(server.baseUrl());
+        ScrapperClient client = new ScrapperClient(server.baseUrl(), rule);
         GenericResponse<AddLinkToDatabaseResponse> actual = client.addLinkToTracking(1L, new AddLinkRequest(new URI("string")));
         GenericResponse<AddLinkToDatabaseResponse> expected = new GenericResponse<>(
             new AddLinkToDatabaseResponse(0L, new URI("string")), null
@@ -260,7 +263,7 @@ public class ScrapperClientTest {
             )
         );
         server.start();
-        ScrapperClient client = new ScrapperClient(server.baseUrl());
+        ScrapperClient client = new ScrapperClient(server.baseUrl(), rule);
         GenericResponse<AddLinkToDatabaseResponse> actual = client.addLinkToTracking(1L, new AddLinkRequest(new URI("string")));
         GenericResponse<AddLinkToDatabaseResponse> expected = new GenericResponse<>(
             null, new ApiErrorResponse(
@@ -295,7 +298,7 @@ public class ScrapperClientTest {
             )
         );
         server.start();
-        ScrapperClient client = new ScrapperClient(server.baseUrl());
+        ScrapperClient client = new ScrapperClient(server.baseUrl(), rule);
         GenericResponse<RemoveLinkFromDatabaseResponse> actual = client.removeLinkFromTracking(1L, new RemoveLinkRequest(0L));
         GenericResponse<RemoveLinkFromDatabaseResponse> expected = new GenericResponse<>(new RemoveLinkFromDatabaseResponse(0L, new URI("string")), null);
 
@@ -327,7 +330,7 @@ public class ScrapperClientTest {
             )
         );
         server.start();
-        ScrapperClient client = new ScrapperClient(server.baseUrl());
+        ScrapperClient client = new ScrapperClient(server.baseUrl(), rule);
         GenericResponse<RemoveLinkFromDatabaseResponse> actual = client.removeLinkFromTracking(1L, new RemoveLinkRequest(0L));
         GenericResponse<RemoveLinkFromDatabaseResponse> expected = new GenericResponse<>(
             null, new ApiErrorResponse(

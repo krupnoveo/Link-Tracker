@@ -3,6 +3,8 @@ package edu.java.configuration;
 import edu.java.api.httpClient.BotClient;
 import edu.java.clients.GitHubClient;
 import edu.java.clients.StackOverflowClient;
+import edu.java.configuration.RetryConfiguration.Client;
+import edu.java.util.RetryFactory;
 import java.util.Map;
 import java.util.Properties;
 import lombok.extern.log4j.Log4j2;
@@ -22,14 +24,14 @@ public class ClientConfiguration {
     public GitHubClient gitHubClient(
         @Value("${clients.github.base-url}") String baseUrl,
         @Value("${clients.github.token}") String gitHubToken,
-        Properties properties
+        Properties properties,
+        RetryConfiguration retryConfiguration
     ) {
         WebClient client = WebClient.builder()
             .baseUrl(baseUrl)
             .defaultStatusHandler(httpStatusCode -> true, clientResponse -> Mono.empty())
-            .defaultHeaders(httpHeaders -> {
-                httpHeaders.add(HttpHeaders.AUTHORIZATION, "Bearer " + gitHubToken);
-            })
+            .defaultHeaders(httpHeaders ->
+                httpHeaders.add(HttpHeaders.AUTHORIZATION, "Bearer " + gitHubToken))
             .build();
         Map response = client
             .get()
@@ -42,11 +44,15 @@ public class ClientConfiguration {
                 log.info(
                     "Invalid GitHub token. Creating GitHubClient object without authentication token. Rate limit is 60"
                 );
-                return new GitHubClient(baseUrl, properties);
+                return new GitHubClient(
+                    baseUrl, properties, RetryFactory.createRule(retryConfiguration.clientConfigs(), Client.GITHUB)
+                );
             }
         }
         log.info("Valid GitHub token. Creating GitHubClient object with authentication token. Rate limit is 5000");
-        return new GitHubClient(baseUrl, gitHubToken, properties);
+        return new GitHubClient(
+            baseUrl, gitHubToken, properties, RetryFactory.createRule(retryConfiguration.clientConfigs(), Client.GITHUB)
+        );
     }
 
     @Bean
@@ -54,7 +60,8 @@ public class ClientConfiguration {
         @Value("${clients.stackoverflow.base-url}") String baseUrl,
         @Value("${clients.stackoverflow.key}") String key,
         @Value("${clients.stackoverflow.token}") String token,
-        Properties properties
+        Properties properties,
+        RetryConfiguration retryConfiguration
     ) {
         WebClient client = WebClient.builder()
             .baseUrl(baseUrl + "/questions?site=stackoverflow&access_token=" + token + "&key=" + key)
@@ -71,15 +78,25 @@ public class ClientConfiguration {
                 && (errorId == HttpStatus.BAD_REQUEST.value() || errorId == HttpStatus.FORBIDDEN.value())) {
                 log.info("Invalid StackOverflow key or/and token. Initializing without key and token. "
                      + "Rate limit is 300 per day");
-                return new StackOverflowClient(baseUrl, properties);
+                return new StackOverflowClient(
+                    baseUrl,
+                    properties,
+                    RetryFactory.createRule(retryConfiguration.clientConfigs(), Client.STACKOVERFLOW)
+                );
             }
         }
         log.info("Valid StackOverflow key and token. Initializing with key and token. Rate limit is 10000 per day");
-        return new StackOverflowClient(baseUrl, properties, key, token);
+        return new StackOverflowClient(
+            baseUrl,
+            properties,
+            key,
+            token,
+            RetryFactory.createRule(retryConfiguration.clientConfigs(), Client.STACKOVERFLOW)
+        );
     }
 
     @Bean
-    public BotClient botClient() {
-        return new BotClient();
+    public BotClient botClient(RetryConfiguration retryConfiguration) {
+        return new BotClient(RetryFactory.createRule(retryConfiguration.clientConfigs(), Client.BOT));
     }
 }

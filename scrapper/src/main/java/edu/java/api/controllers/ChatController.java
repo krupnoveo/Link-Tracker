@@ -1,8 +1,10 @@
 package edu.java.api.controllers;
 
+import edu.java.api.controllers.rateLimit.RateLimit;
 import edu.java.api.services.ChatsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,13 +21,15 @@ public class ChatController {
 
     @PostMapping(path = "/{id}")
     @Operation(summary = "Зарегистрировать чат")
-    public void registerChat(@PathVariable("id") long chatId) {
+    @RateLimit
+    public void registerChat(@PathVariable("id") long chatId, HttpServletRequest request) {
         service.registerChat(chatId);
     }
 
     @DeleteMapping(path = "/{id}")
     @Operation(summary = "Удалить чат")
-    public void deleteChat(@PathVariable("id") long chatId) {
+    @RateLimit
+    public void deleteChat(@PathVariable("id") long chatId, HttpServletRequest request) {
         service.deleteChat(chatId);
     }
 }

@@ -2,6 +2,8 @@ package edu.java.clients;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.java.models.LinkData;
+import edu.java.models.RetryRule;
+import edu.java.util.RetryFactory;
 import java.net.URL;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -21,21 +23,26 @@ public class GitHubClient extends BaseClient {
     private String refType;
     private String commitsCount;
 
-    public GitHubClient(String baseUrl, String gitHubToken, Properties properties) {
+    public GitHubClient(String baseUrl, String gitHubToken, Properties properties, RetryRule rule) {
         super(
             WebClient.builder()
                 .baseUrl(baseUrl)
-                .defaultHeaders(headers -> {
-                    headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + gitHubToken);
-                })
+                .defaultHeaders(headers -> headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + gitHubToken))
+                .filter(RetryFactory.createFilter(rule))
                 .build(),
             properties
         );
         initializeFields();
     }
 
-    public GitHubClient(String url, Properties properties) {
-        super(url, properties);
+    public GitHubClient(String url, Properties properties, RetryRule rule) {
+        super(
+            WebClient.builder()
+                .baseUrl(url)
+                .filter(RetryFactory.createFilter(rule))
+                .build(),
+            properties
+        );
         initializeFields();
     }
 

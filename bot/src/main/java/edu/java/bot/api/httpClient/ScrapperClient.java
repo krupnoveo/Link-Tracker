@@ -8,8 +8,12 @@ import edu.java.bot.models.Chat;
 import edu.java.bot.models.GenericResponse;
 import edu.java.bot.models.ListLinksResponse;
 import edu.java.bot.models.RemoveLinkFromDatabaseResponse;
+import edu.java.bot.models.RetryRule;
+import edu.java.bot.util.RetryFactory;
+import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -21,16 +25,24 @@ public class ScrapperClient {
     private final static String PATH_FOR_LINKS_CONTROLLER = "/links";
     private final static String HEADER_FOR_LINKS_CONTROLLER = "Tg-Chat-Id";
     private final WebClient webClient;
+    private final static ApiErrorResponse EXHAUSTED_RETRY = new ApiErrorResponse(
+        "по каким-то причинам сервер временно недоступен, повторите запрос позже",
+        HttpStatus.REQUEST_TIMEOUT.toString(),
+        "",
+        "",
+        List.of()
+    );
 
-    public ScrapperClient() {
+    public ScrapperClient(RetryRule rule) {
         this.webClient = WebClient
             .builder()
+            .filter(RetryFactory.createFilter(rule))
             .defaultStatusHandler(httpStatusCode -> true, clientResponse -> Mono.empty())
             .baseUrl(BASE_URL)
             .build();
     }
 
-    public ScrapperClient(String baseUrl) {
+    public ScrapperClient(String baseUrl, RetryRule rule) {
         this.webClient = WebClient.create(baseUrl);
     }
 
@@ -45,6 +57,7 @@ public class ScrapperClient {
                 }
                 return response.bodyToMono(ApiErrorResponse.class);
             })
+            .onErrorReturn(throwable -> throwable instanceof IllegalStateException, EXHAUSTED_RETRY)
             .block();
         if (clientResponse == null) {
             return new GenericResponse<>(null, null);
@@ -62,6 +75,7 @@ public class ScrapperClient {
                 }
                 return response.bodyToMono(ApiErrorResponse.class);
             })
+            .onErrorReturn(throwable -> throwable instanceof IllegalStateException, EXHAUSTED_RETRY)
             .block();
         if (clientResponse == null) {
             return new GenericResponse<>(null, null);
@@ -80,6 +94,7 @@ public class ScrapperClient {
                 }
                 return response.bodyToMono(ApiErrorResponse.class);
             })
+            .onErrorReturn(throwable -> throwable instanceof IllegalStateException, EXHAUSTED_RETRY)
             .block();
         if (clientResponse instanceof ListLinksResponse) {
             return new GenericResponse<>((ListLinksResponse) clientResponse, null);
@@ -99,6 +114,7 @@ public class ScrapperClient {
                 }
                 return response.bodyToMono(ApiErrorResponse.class);
             })
+            .onErrorReturn(throwable -> throwable instanceof IllegalStateException, EXHAUSTED_RETRY)
             .block();
         if (clientResponse instanceof AddLinkToDatabaseResponse) {
             return new GenericResponse<>((AddLinkToDatabaseResponse) clientResponse, null);
@@ -121,6 +137,7 @@ public class ScrapperClient {
                 }
                 return response.bodyToMono(ApiErrorResponse.class);
             })
+            .onErrorReturn(throwable -> throwable instanceof IllegalStateException, EXHAUSTED_RETRY)
             .block();
         if (clientResponse instanceof RemoveLinkFromDatabaseResponse) {
             return new GenericResponse<>((RemoveLinkFromDatabaseResponse) clientResponse, null);
