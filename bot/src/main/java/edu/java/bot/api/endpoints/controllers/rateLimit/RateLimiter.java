@@ -1,4 +1,4 @@
-package edu.java.bot.api.controllers.rateLimit;
+package edu.java.bot.api.endpoints.controllers.rateLimit;
 
 import io.github.bucket4j.Bucket;
 import java.time.Duration;

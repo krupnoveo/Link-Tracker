@@ -1,4 +1,4 @@
-package edu.java.bot.api.controllers.rateLimit;
+package edu.java.bot.api.endpoints.controllers.rateLimit;
 
 import edu.java.bot.api.exceptions.TooManyRequestsException;
 import jakarta.servlet.http.HttpServletRequest;

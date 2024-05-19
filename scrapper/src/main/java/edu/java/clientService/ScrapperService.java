@@ -1,4 +1,4 @@
-package edu.java.httpClientService;
+package edu.java.clientService;
 
 import edu.java.models.GenericResponse;
 import edu.java.models.LinkUpdate;

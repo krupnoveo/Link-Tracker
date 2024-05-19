@@ -2,6 +2,7 @@ package edu.java.configuration;
 
 import jakarta.validation.constraints.NotNull;
 import java.time.Duration;
+import java.util.Map;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
@@ -10,7 +11,9 @@ import org.springframework.validation.annotation.Validated;
 public record ApplicationConfig(
     @NotNull
     Scheduler scheduler,
-    AccessType databaseAccessType
+    AccessType databaseAccessType,
+    Kafka kafka,
+    Boolean useQueue
 ) {
     public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {
     }
@@ -18,4 +21,6 @@ public record ApplicationConfig(
     public enum AccessType {
         JDBC, JPA, JOOQ
     }
+
+    public record Kafka(Map<String, String> topics) {}
 }

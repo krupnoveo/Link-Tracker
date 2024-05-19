@@ -1,4 +1,4 @@
-package edu.java.bot.api.controllers;
+package edu.java.bot.api.endpoints.controllers;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import edu.java.bot.api.dto.response.ApiErrorResponse;

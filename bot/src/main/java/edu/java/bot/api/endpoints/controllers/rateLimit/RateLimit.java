@@ -1,4 +1,4 @@
-package edu.java.bot.api.controllers.rateLimit;
+package edu.java.bot.api.endpoints.controllers.rateLimit;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

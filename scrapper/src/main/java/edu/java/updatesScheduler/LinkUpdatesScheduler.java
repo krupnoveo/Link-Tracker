@@ -1,7 +1,7 @@
 package edu.java.updatesScheduler;
 
 import edu.java.api.dto.response.ApiErrorResponse;
-import edu.java.httpClientService.ScrapperService;
+import edu.java.clientService.ScrapperService;
 import edu.java.models.Chat;
 import edu.java.models.GenericResponse;
 import edu.java.models.LinkData;

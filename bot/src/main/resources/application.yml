@@ -8,6 +8,22 @@ spring:
     name: bot
   jackson:
     time-zone: UTC
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: scrapper
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.value.default.type: edu.java.bot.models.ListLinkUpdates
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      bootstrap-servers: localhost:9092
+      properties:
+        spring.json.add.type.headers: false
 
 retry:
   client-configs:
@@ -16,8 +32,6 @@ retry:
       max-attempts: 10
       min-delay: 1s
       codes: 429
-
-
 
 rate-limiting:
   capacity: 100

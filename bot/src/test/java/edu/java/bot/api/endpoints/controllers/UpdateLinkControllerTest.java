@@ -1,6 +1,7 @@
-package edu.java.bot.api.controllers;
+package edu.java.bot.api.endpoints.controllers;
 
 import edu.java.bot.api.dto.request.LinkUpdate;
+import edu.java.bot.api.endpoints.controllers.UpdateLinkController;
 import edu.java.bot.api.service.LinkUpdatesService;
 import java.net.URI;
 import java.util.List;

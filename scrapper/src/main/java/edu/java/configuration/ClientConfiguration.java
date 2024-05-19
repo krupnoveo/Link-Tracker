@@ -1,6 +1,10 @@
 package edu.java.configuration;
 
-import edu.java.api.httpClient.BotClient;
+import edu.java.api.client.http.BotClient;
+import edu.java.api.client.kafka.KafkaClientProducer;
+import edu.java.clientService.ScrapperService;
+import edu.java.clientService.http.HttpScrapperService;
+import edu.java.clientService.kafka.KafkaScrapperService;
 import edu.java.clients.GitHubClient;
 import edu.java.clients.StackOverflowClient;
 import edu.java.configuration.RetryConfiguration.Client;
@@ -98,5 +102,17 @@ public class ClientConfiguration {
     @Bean
     public BotClient botClient(RetryConfiguration retryConfiguration) {
         return new BotClient(RetryFactory.createRule(retryConfiguration.clientConfigs(), Client.BOT));
+    }
+
+    @Bean
+    public ScrapperService scrapperService(
+        ApplicationConfig config,
+        BotClient botClient,
+        KafkaClientProducer kafkaClientProducer
+    ) {
+        if (config.useQueue()) {
+            return new KafkaScrapperService(kafkaClientProducer);
+        }
+        return new HttpScrapperService(botClient);
     }
 }
