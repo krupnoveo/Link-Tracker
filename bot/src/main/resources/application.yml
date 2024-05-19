@@ -33,24 +33,6 @@ retry:
       min-delay: 1s
       codes: 429
 
-
-
-rate-limiting:
-  capacity: 100
-  tokens-per-period: 100
-  gen-period: 1s
-  excluded-ips: 127.0.0.1
-
-retry:
-  client-configs:
-    - client: scrapper
-      mode: fixed
-      max-attempts: 10
-      min-delay: 1s
-      codes: 429
-
-
-
 rate-limiting:
   capacity: 100
   tokens-per-period: 100
